@@ -9,8 +9,9 @@ from .forms import ListingForm
 from listing.models import *
 
 from django.core.files.storage import default_storage
+from django.shortcuts import redirect
 
-# Create your views here.
+# Create your views here.2
 
 #This view gives the list view of the listings
 @login_required
@@ -33,18 +34,18 @@ def listing_list(request):
 #This view is for the form to create new listings 
 def create_listing(request):
 
-    context = {'listings': Listing.objects.all()}
-    if request.method == 'POST':
-        form = ListingForm(request.POST, request.FILES)
+    if request.method == "POST":
+        form = ListingForm(request.POST)
         if form.is_valid():
-
             file = request.FILES['image']
             default_storage.save(file.name, file)
-            list = form.save(commit=False)
-            list.author = request.user
-            list.file_path = file.name
-            list.save()
-            return HttpResponseRedirect('/')
-        context['form'] = form
-
-    return render(request, 'listing/create_listing.html', {})
+            listing = form.save(commit=False)
+            listing.author = request.user
+            listing.file_path = file.name
+            listing.publish_date = timezone.now()
+            listing.edit_date = timezone.now()
+            listing.save()
+            return redirect('/')
+    else:
+        form = ListingForm()
+    return render(request, 'listing/create_listing.html', {'form': form})

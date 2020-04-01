@@ -21,7 +21,11 @@
       <div class="card-body">
         <h5 class="card-title">{{l.title}}</h5>
         <p class="card-text">{{l.text}}</p>
-        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        <p class="card-inventory">{{l.inventory}}<small class="text-text"> units remaining</small></p>
+        <p class="card-text"><small class="text-muted">Last updated at</small>{{l.edit_date}}</p>
+        <p class="card-author">{{l.author}}</p>
+
       </div>
     </div>
   </div>
