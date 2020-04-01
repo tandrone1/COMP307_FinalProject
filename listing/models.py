@@ -5,6 +5,7 @@ from django.db import models
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from transaction.models import Transaction
 
 class Listing(models.Model):
 	#Change author to correspond to account eventually
@@ -23,4 +24,15 @@ class Listing(models.Model):
     def __str__(self):
         return self.title
 
-	#inventory
+#for transactions
+class PurchasedListing(models.Model):
+	#Change author to correspond to account eventually
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    author = models.TextField(null=True)
+    title = models.TextField(null=True)
+    file_path = models.TextField(null=True)
+    text = models.TextField(null=True)
+    price = models.TextField(null=True)
+    
+    def __str__(self):
+        return self.title

@@ -9,3 +9,5 @@ from django.contrib.auth.models import User
 
 class Account(models.Model):
 	owner = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
