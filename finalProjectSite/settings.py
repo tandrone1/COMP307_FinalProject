@@ -29,6 +29,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+STATICFILES_DIRS = [
+    "/finalApp/static"
+]
+
+MEDIA_ROOT = 'listing/static/images'
 
 # Application definition
 
@@ -40,7 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'finalApp.apps.FinalappConfig',
-    'account.apps.AccountappConfig'
+    'account.apps.AccountConfig',
+    'listing.apps.ListingConfig',
+    'transaction.apps.TransactionConfig',
+    'chat.apps.ChatConfig'
 ]
 
 MIDDLEWARE = [

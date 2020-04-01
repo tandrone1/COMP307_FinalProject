@@ -1,0 +1,33 @@
+{% load static %}
+{% include "finalApp/header.html" %}
+
+
+<center>
+<h2>Listings</h2>
+<div>
+
+<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">Create a Listing</button>
+
+<div class="listing-content">
+
+{% for l in listings %}
+
+    <div class="card mb-3 custom-card">
+  <div class="row">
+    <div class="col-md-3">
+      <img src="{% static 'images/'|add:l.file_path %}" class="card-img custom-img" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{l.title}}</h5>
+        <p class="card-text">{{l.text}}</p>
+        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+
+
+</center>
