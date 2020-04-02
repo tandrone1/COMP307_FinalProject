@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from . import forms
+from account.models import *
+from django.contrib.auth.models import User
 
 # Create your views here.
 
