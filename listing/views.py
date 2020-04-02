@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.utils.html import escape
 from django.utils import timezone
+from datetime import datetime
 from .forms import ListingForm, EditListingForm
 from django.template import Context, Template
 from listing.models import *
@@ -45,7 +46,6 @@ def create_listing(request):
             listing.author = request.user
             listing.file_path = file.name
             listing.publish_date = timezone.now()
-            listing.edit_date = timezone.now()
             listing.save()
             return redirect('/')
     else:
@@ -57,27 +57,33 @@ def create_listing(request):
 def edit_listing(request, listing_id=None):
 
     if request.method == "POST":
+        context = {}
         form = ListingForm(request.POST)
+        context['form'] = form
+
         if form.is_valid():
-            file = request.FILES['image']
-            default_storage.save(file.name, file)
-            listing = form.save(commit=False)
-            listing.author = request.user
-            listing.file_path = file.name
-            listing.publish_date = timezone.now()
-            listing.edit_date = timezone.now()
+
+            article = Listing.objects.get(id=listing_id)
+
+            listing = ListingForm(request.POST, instance=article)
+            
+            listing.save(commit=False)
+            
+            #Edit_date is not changing 
+            listing.edit_date = datetime.now()
             listing.save()
+
             return redirect('/')
 
     else:
+        # Gets the matching listing based on listing_id, gets the form and puts into context
         listings = Listing.objects.filter(id=listing_id)
         if not listings:
             return HttpResponseNotFound('<h3>Page not found.</h3>')
         listing = listings[0]
 
         context = {'listing': listing}
-        form = EditListingForm()
-        context['form'] = form
+    
        
     return render(request, 'listing/edit_listing.html', context)
 
