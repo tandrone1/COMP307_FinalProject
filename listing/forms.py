@@ -7,4 +7,11 @@ class ListingForm(ModelForm):
         # fields = ['title', 'text']
         fields = ['title', 'text', 'price', 'inventory']
         
+
+
+class EditListingForm(ModelForm):
+    class Meta:
+        model = Listing
+        # fields = ['title', 'text']
+        fields = ['title', 'text', 'price', 'inventory']
         
