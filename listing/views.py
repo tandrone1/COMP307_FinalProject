@@ -33,6 +33,7 @@ def listing_list(request):
 
 
 #This view is for the form to create new listings 
+@login_required
 def create_listing(request):
 
     if request.method == "POST":
