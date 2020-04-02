@@ -19,7 +19,12 @@
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{l.title}}</h5>
+        <h5 class="card-title">{{l.title}}</h5> 
+          <!-- Button trigger modal -->
+        <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-primary">
+          Edit
+        </button>
+
         <p class="card-text">{{l.text}}</p>
         <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
         <p class="card-inventory">{{l.inventory}}<small class="text-text"> units remaining</small></p>
@@ -33,5 +38,5 @@
 
 {% endfor %}
 
-
 </center>
+

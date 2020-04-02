@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from . import forms
+from account.models import *
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -15,10 +17,14 @@ def signup_action(request):
         form = forms.SignupForm(request.POST)
         if form.is_valid():
             try:
+                # user creation
               user = User.objects.create_user(
                 form.cleaned_data['username'], 
                 email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password'])
+              # account creation, each account linked to a user
+              account = Account(owner=user)
+              account.save()
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
                 form.add_error('username', 'Username is taken')
@@ -46,7 +52,7 @@ def login_action(request):
         context['form'] = form
     return render(request, 'account/login.html', context)
 
-
+@login_required
 def logout_action(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))

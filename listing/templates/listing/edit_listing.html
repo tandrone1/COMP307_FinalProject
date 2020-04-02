@@ -1,0 +1,37 @@
+{% load static %}
+{% include "finalApp/header.html" %}
+
+
+
+<h1>{{listing.title}}</h1>
+
+<div>
+
+ <img src="{% static 'images/'|add:listing.file_path %}" style="width: 15%; height: 15%" class="card-img custom-img" alt="...">
+{{listing.text}}
+</div>
+
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div>
+    Image: <input type="file" name="image" />
+    {{form.image.errors}}
+  <div>
+  <div>
+    Title: <input type="text" value={{listing.title}} name="title" />
+    {{form.title.errors}}
+  <div>
+  <div>
+    Description: <input type="textarea" value={{listing.text}} name="text" />
+    {{form.text.errors}}
+  <div>
+  <div>
+    Price: <input type="text" value={{listing.price}} name="price" />
+    {{form.price.errors}}
+  <div>
+  <div>
+    Inventory: <input type="text" value={{listing.inventory}} name="inventory" />
+    {{form.inventory.errors}}
+  <div>
+  <input type="submit" />
+</form>
