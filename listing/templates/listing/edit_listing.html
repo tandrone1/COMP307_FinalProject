@@ -2,36 +2,41 @@
 {% include "finalApp/header.html" %}
 
 
+<center>
+
+<div class="listing-content">
 
 <h1>{{listing.title}}</h1>
 
-<div>
-
+<div style="margin-bottom: 15px">
  <img src="{% static 'images/'|add:listing.file_path %}" style="width: 15%; height: 15%" class="card-img custom-img" alt="...">
-{{listing.text}}
 </div>
 
 <form action="" method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div>
-    Image: <input type="file" name="image" />
-    {{form.image.errors}}
-  <div>
-  <div>
-    Title: <input type="text" value={{listing.title}} name="title" />
+ {% csrf_token %} 
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control"id="title" value="{{listing.title}}" name="title">
     {{form.title.errors}}
-  <div>
-  <div>
-    Description: <input type="textarea" value={{listing.text}} name="text" />
+  </div>
+  <div class="form-group">
+    <label for="text">Description</label>
+    <input type="textarea" rows="5" class="form-control" id="text" value="{{listing.text}}" name="text">
     {{form.text.errors}}
-  <div>
-  <div>
-    Price: <input type="text" value={{listing.price}} name="price" />
+  </div>
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input type="text" class="form-control" id="price" value="{{listing.price}}" name="price">
     {{form.price.errors}}
-  <div>
-  <div>
-    Inventory: <input type="text" value={{listing.inventory}} name="inventory" />
+  </div>
+  <div class="form-group">
+    <label for="inventory">Inventory</label>
+    <input type="text" class="form-control" id="inventory" value="{{listing.inventory}}" name="inventory">
     {{form.inventory.errors}}
-  <div>
-  <input type="submit" />
+  </div>
+  <button onclick="myFunction()" class="btn btn-danger">Delete</button>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
+</div>
+</center>
