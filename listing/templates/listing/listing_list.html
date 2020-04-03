@@ -6,31 +6,30 @@
 <h2>Listings</h2>
 <div>
 
-<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">Create a Listing</button>
+<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">New Listing</button>
 
 <div class="listing-content">
 
 {% for l in listings %}
 
-    <div class="card mb-3 custom-card">
-  <div class="row">
-    <div class="col-md-3">
-      <img src="{% static 'images/'|add:l.file_path %}" class="card-img custom-img" alt="...">
+  <div class="card mb-3 custom-card">
+
+  <div class="row" >
+    <div class="col-md-5 listing-img">
+      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="card-body">
         <h5 class="card-title">{{l.title}}</h5> 
-          <!-- Button trigger modal -->
-        <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-primary">
-          Edit
-        </button>
-
         <p class="card-text">{{l.text}}</p>
         <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
-        <p class="card-inventory">{{l.inventory}}<small class="text-text"> units remaining</small></p>
-        <p class="card-text"><small class="text-muted">Last updated at</small>{{l.edit_date}}</p>
-        <p class="card-author">{{l.author}}</p>
-
+        <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+        <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
+        <p class="card-author">By {{l.author}}</p>
+        <!-- Button trigger modal -->
+        <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
+          Edit
+        </button>
       </div>
     </div>
   </div>
