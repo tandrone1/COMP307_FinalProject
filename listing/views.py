@@ -42,6 +42,7 @@ def create_listing(request):
             listing.author = request.user
             listing.file_path = file.name
             listing.publish_date = timezone.now()
+            listing.edit_date = timezone.now()
             listing.save()
             return redirect('/')
     else:
@@ -64,12 +65,8 @@ def edit_listing(request, listing_id=None):
             # Checks if the author of the listing being edited matches the user making the edit 
             if 'edit' in request.POST and request.user == article.author:
 
-                listing = ListingForm(request.POST, instance=article)
-            
+                listing = ListingForm(request.POST, instance=article)           
                 listing.save(commit=False)
-            
-                #Edit_date is not changing 
-                listing.edit_date = datetime.now()
                 listing.save()
 
             elif 'delete' in request.POST and request.user == article.author:
