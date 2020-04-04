@@ -10,7 +10,11 @@
 
 <div class="listing-content">
 
-{% for l in listings %}
+{% comment %} Section for MY LISTINGS {% endcomment %}
+<div class="listing-section">
+<h4>My Listings</h4>
+
+{% for l in my_listings %}
 
   <div class="card mb-3 custom-card">
 
@@ -27,6 +31,7 @@
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
         <!-- Button trigger modal -->
+
         <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
           Edit
         </button>
@@ -36,6 +41,37 @@
 </div>
 
 {% endfor %}
+</div>
 
+
+{% comment %} Section for ALL LISTINGS {% endcomment %}
+<div class="listing-section">
+<h4>All Listings</h4>
+{% for l in listings %}
+
+  <div class="card mb-3 custom-card">
+
+  <div class="row" >
+    <div class="col-md-5 listing-img">
+      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title">{{l.title}}</h5> 
+        <p class="card-text">{{l.text}}</p>
+        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+        <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
+        <p class="card-author">By {{l.author}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+
+</div>
+</div>
 </center>
 

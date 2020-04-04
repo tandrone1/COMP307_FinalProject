@@ -8,8 +8,17 @@ from django.db import IntegrityError
 from . import forms
 from account.models import *
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission
 
-# Create your views here.
+# LEAVE IN CASE WE NEED TO EDIT PERMISSIONS 
+# def set_permissions(user):
+
+#     permission = Permission.objects.get(name='Can change listings')
+#     permission1 = Permission.objects.get(name='Can delete listings')
+#     permission2 = Permission.objects.get(name='Can view listings')
+#     user.user_permissions.remove(permission, permission1)
+#     user.user_permissions.add(permission2)
+
 
 def signup_action(request):
     context = {}
@@ -22,9 +31,11 @@ def signup_action(request):
                 form.cleaned_data['username'], 
                 email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password'])
+                
               # account creation, each account linked to a user
               account = Account(owner=user)
               account.save()
+
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
                 form.add_error('username', 'Username is taken')
