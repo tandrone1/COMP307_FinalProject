@@ -9,6 +9,7 @@ from . import forms
 from account.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
+from django.contrib import messages
 
 # LEAVE IN CASE WE NEED TO EDIT PERMISSIONS 
 # def set_permissions(user):
@@ -65,5 +66,6 @@ def login_action(request):
 
 @login_required
 def logout_action(request):
+    messages.info(request, 'Logout complete.')
     logout(request)
     return HttpResponseRedirect(reverse('login'))
