@@ -1,6 +1,15 @@
 {% include "finalApp/header.html" %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <h2>Login</h2>
 <div>{{ form.non_field_errors }}</div>
+
 <form action="" method="post">
     {% csrf_token %}
     <p>

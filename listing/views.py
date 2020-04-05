@@ -10,6 +10,9 @@ from .forms import ListingForm, EditListingForm
 from django.template import Context, Template
 from listing.models import *
 
+from django.contrib.auth.decorators import permission_required
+from django.core.exceptions import PermissionDenied
+
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 
@@ -19,18 +22,11 @@ from django.shortcuts import redirect
 @login_required
 def listing_list(request):
 
-    context = {'listings': Listing.objects.all()}
-    # listings = []
-    # for l in Listing.objects.all():
-    #     listings.append({
-    #       'title': l.title,
-    #       'text': l.text,
-    #       'file_path': l.file_path
-    #     })
-    # context = {'listings': listings}
+    context = {'my_listings': Listing.objects.filter(author=request.user)}
+    context['user'] = request.user 
+    context['listings'] = Listing.objects.exclude(author=request.user)
 
     return render(request, 'listing/listing_list.html', context)
-
 
 
 #This view is for the form to create new listings 
@@ -46,6 +42,7 @@ def create_listing(request):
             listing.author = request.user
             listing.file_path = file.name
             listing.publish_date = timezone.now()
+            listing.edit_date = timezone.now()
             listing.save()
             return redirect('/')
     else:
@@ -53,7 +50,7 @@ def create_listing(request):
     return render(request, 'listing/create_listing.html', {'form': form})
 
 
-
+@login_required
 def edit_listing(request, listing_id=None):
 
     if request.method == "POST":
@@ -65,13 +62,17 @@ def edit_listing(request, listing_id=None):
 
             article = Listing.objects.get(id=listing_id)
 
-            listing = ListingForm(request.POST, instance=article)
-            
-            listing.save(commit=False)
-            
-            #Edit_date is not changing 
-            listing.edit_date = datetime.now()
-            listing.save()
+            # Checks if the author of the listing being edited matches the user making the edit 
+            if 'edit' in request.POST and request.user == article.author:
+
+                listing = ListingForm(request.POST, instance=article)           
+                listing.save(commit=False)
+                listing.save()
+
+            elif 'delete' in request.POST and request.user == article.author:
+
+                article = Listing.objects.get(id=listing_id)
+                article.delete()
 
             return redirect('/')
 
@@ -83,7 +84,7 @@ def edit_listing(request, listing_id=None):
         listing = listings[0]
 
         context = {'listing': listing}
-    
+        context['user'] = request.user
        
     return render(request, 'listing/edit_listing.html', context)
 
