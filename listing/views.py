@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.utils.html import escape
 from django.utils import timezone
 from datetime import datetime
-from .forms import ListingForm, EditListingForm
+from .forms import ListingForm, EditListingForm, PurchasedListingForm
 from django.template import Context, Template
 from listing.models import *
 
@@ -17,14 +17,33 @@ from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 
 # Create your views here.2
-
 #This view gives the list view of the listings
+cart=[]
 @login_required
 def listing_list(request):
-
     context = {'my_listings': Listing.objects.filter(author=request.user)}
     context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
+
+    if request.method == "POST":
+        form = PurchasedListingForm(request.POST)
+        if form.is_valid():
+
+
+            #for checking out
+            #currently breaks by way of 'cart is not defined before it is used for some reason'
+            # if request.POST.get('Buy')=="Buy":
+            #     print('items bought')
+            #     for i in cart:
+            #         i.delete()
+            #     cart=[]
+
+
+            pl = PurchasedListing.create(request.POST.get('author'),request.POST.get('title'),request.POST.get('file_path'),request.POST.get('text'),request.POST.get('price'),request.user)
+            cart.append(pl)
+            print(cart)
+
+    
 
     return render(request, 'listing/listing_list.html', context)
 

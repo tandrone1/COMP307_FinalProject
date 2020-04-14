@@ -34,8 +34,8 @@ def signup_action(request):
                 password=form.cleaned_data['password'])
                 
               # account creation, each account linked to a user
-              account = Account(owner=user)
-              account.save()
+              # account = Account(owner=user)
+              # account.save()
 
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:

@@ -31,7 +31,15 @@
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
         <!-- Button trigger modal -->
-
+        <form method='post' action='#'>
+          {% csrf_token %} 
+          <button type="submit" value="AddToCart" name='AddToCart'>BUY</button>
+          <input type="hidden" id="author" name="author" value="{{l.author}}">
+          <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
+          <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
+          <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
+          <input type="hidden" id="price" name="price" value={{l.price}}>
+        </form>
         <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
           Edit
         </button>
@@ -63,6 +71,15 @@
         <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
+        <form method='post' action='#'>
+          {% csrf_token %} 
+          <button type="submit" value="AddToCart" name='AddToCart'>BUY</button>
+          <input type="hidden" id="author" name="author" value="{{l.author}}">
+          <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
+          <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
+          <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
+          <input type="hidden" id="price" name="price" value={{l.price}}>
+        </form>
       </div>
     </div>
   </div>
@@ -70,7 +87,10 @@
 
 {% endfor %}
 </div>
-
+<form method='post' action='#'>
+  {% csrf_token %} 
+    <input type="submit" value="Buy" name="Buy"/>
+</form>
 </div>
 </div>
 </center>
