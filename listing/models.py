@@ -33,18 +33,22 @@ class Listing(models.Model):
 
 class PurchasedListing(models.Model):
     #Change author to correspond to account eventually
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    # id = models.AutoField(primary_key=True)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,default=1)
     author = models.TextField(null=True)
     title = models.TextField(null=True)
     file_path = models.TextField(null=True)
     text = models.TextField(null=True)
     price = models.TextField(null=True)
-    purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    #purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        super(PurchasedListing, self).save(*args, **kwargs)
+
     @classmethod    
-    def create(cls, author, title, file_path, text, price, purchaser):
-        purchasedlisting = cls(author=author, title=title, file_path = file_path, text = text, price = price, purchaser = purchaser)
+    def create(cls, author, title, file_path, text, price):
+        purchasedlisting = cls(author=author, title=title, file_path = file_path, text = text, price = price)
         return purchasedlisting
