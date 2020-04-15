@@ -9,39 +9,59 @@ from datetime import datetime
 from .forms import ListingForm, EditListingForm, PurchasedListingForm
 from django.template import Context, Template
 from listing.models import *
-
+from transaction.models import *
+import json
+import string
+import random
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
+from django.core import serializers
+
 
 # Create your views here.2
 #This view gives the list view of the listings
-cart=[]
 @login_required
 def listing_list(request):
     context = {'my_listings': Listing.objects.filter(author=request.user)}
     context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
+    #Use this flush to clear the system after testing
+    #Transaction.objects.all().delete()
+    if request.session.get('cart') is None:
+        request.session['cart']=json.loads('{}')
+        t = Transaction(customer=request.user)
+        t.save()
+        request.session['transaction'] = t.id
+        
+        
 
     if request.method == "POST":
         form = PurchasedListingForm(request.POST)
         if form.is_valid():
 
-
-            #for checking out
-            #currently breaks by way of 'cart is not defined before it is used for some reason'
-            # if request.POST.get('Buy')=="Buy":
-            #     print('items bought')
-            #     for i in cart:
-            #         i.delete()
-            #     cart=[]
-
-
-            pl = PurchasedListing.create(request.POST.get('author'),request.POST.get('title'),request.POST.get('file_path'),request.POST.get('text'),request.POST.get('price'),request.user)
-            cart.append(pl)
-            print(cart)
+            #creating the purchased listing based on the selected one
+            pl = PurchasedListing.create(request.POST.get('author'),request.POST.get('title'),request.POST.get('file_path'),request.POST.get('text'),request.POST.get('price'))
+            pl.transaction=Transaction.objects.get(id=request.session['transaction'])
+            pl.save()
+            #getting the cart from session
+            cart2 = request.session.get('cart')
+            if isinstance(cart2, str):
+                cart3 = json.loads(cart2)
+            else:
+                cart3 = cart2
+            isin=True
+            while(isin):
+                slug = randomString()
+                if(slug not in cart3.keys()):
+                    isin=False
+                    cart3[slug]=pl.id
+                    #this is more robust, puts the whole object in the session, above is simpler
+                    #cart3[slug]=serializers.serialize("json", PurchasedListing.objects.filter(id=pl.id))
+            request.session['cart']=json.dumps(cart3)
+            print(request.session['cart'])
 
     
 
@@ -106,5 +126,16 @@ def edit_listing(request, listing_id=None):
         context['user'] = request.user
        
     return render(request, 'listing/edit_listing.html', context)
+
+
+
+
+############################
+#HELPER FUNCTIONS
+############################
+def randomString(stringLength=4):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
+
 
 
