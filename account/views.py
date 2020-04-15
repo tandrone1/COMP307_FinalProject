@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from . import forms
 from account.models import *
 from django.contrib.auth.models import User
@@ -34,8 +36,8 @@ def signup_action(request):
                 password=form.cleaned_data['password'])
                 
               # account creation, each account linked to a user
-              account = Account(owner=user)
-              account.save()
+              # account = Account(owner=user)
+              # account.save()
 
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
@@ -67,5 +69,12 @@ def login_action(request):
 @login_required
 def logout_action(request):
     messages.info(request, 'Logout complete.')
+
+    if request.user.is_authenticated:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(request.user.username, {
+            'type': 'logout_message',
+            'message': 'Disconnecting. You logged out from another browser or tab.'})
+
     logout(request)
     return HttpResponseRedirect(reverse('login'))

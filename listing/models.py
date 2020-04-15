@@ -8,7 +8,7 @@ from django.utils import timezone
 from transaction.models import Transaction
 
 class Listing(models.Model):
-	#Change author to correspond to account eventually
+    #Change author to correspond to account eventually
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     file_path = models.CharField(max_length=256, null=True)
@@ -31,15 +31,25 @@ class Listing(models.Model):
 
 
 
-#for transactions
 class PurchasedListing(models.Model):
-	#Change author to correspond to account eventually
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    #Change author to correspond to account eventually
+    # id = models.AutoField(primary_key=True)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,default=1)
     author = models.TextField(null=True)
     title = models.TextField(null=True)
     file_path = models.TextField(null=True)
     text = models.TextField(null=True)
     price = models.TextField(null=True)
+    parent = models.ForeignKey(Listing, on_delete=models.SET_NULL, default=None, null=True)
+    #purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        super(PurchasedListing, self).save(*args, **kwargs)
+
+    @classmethod    
+    def create(cls, author, title, file_path, text, price):
+        purchasedlisting = cls(author=author, title=title, file_path = file_path, text = text, price = price)
+        return purchasedlisting
