@@ -75,6 +75,9 @@
           {% csrf_token %} 
           <button type="submit" value="AddToCart" name='AddToCart'>BUY</button>
           <input type="hidden" id="author" name="author" value="{{l.author}}">
+          <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn btn-secondary">
+            Join Chatroom
+          </button>
           <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
           <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
           <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">

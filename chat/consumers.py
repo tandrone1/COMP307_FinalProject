@@ -23,8 +23,36 @@ class ChatConsumer(WebsocketConsumer):
 
         self.accept()
 
+        if user.is_authenticated:
+            message = 'has entered the room.'
+        else:
+            message = 'Anonymous: ' + ' has entered the room.'
+        
+        # Send message to room group
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'message_type': 'meta',
+                'user': user.username
+            }
+        )
+
     def disconnect(self, close_code):
         # Leave room group
+        message = ' has left the room.'
+
+        async_to_sync(self.channel_layer.group_send)(
+            
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message,
+                'message_type': 'meta',
+                'user': self.scope['user'].username
+            }
+        )
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -37,7 +65,7 @@ class ChatConsumer(WebsocketConsumer):
         user = self.scope['user']
         
         if user.is_authenticated:
-            message = user.username + ': ' + message
+            message = message
         else:
             message = 'Anonymous: ' + message
         
@@ -46,22 +74,29 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'message_type': 'default',
+                'user': user.username
             }
         )
-        
-
+    
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
+        message_type = event['message_type']
+        user = event['user']
         # Send message to WebSocket
         self.send(text_data=json.dumps({
-            'message': message
+            'message': message,
+            'type': message_type,
+            'user': user
         }))
     
-    # Receive message from username group
+    # Receive message from username group - when you logout from another tab 
     def logout_message(self, event):
         self.send(text_data=json.dumps({
-            'message': event['message']
+            'message': event['message'],
+            'type': 'meta',
+            'user': ''
         }))
         self.close()
