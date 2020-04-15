@@ -26,11 +26,6 @@ class Listing(models.Model):
         super(Listing, self).save(*args, **kwargs)
 
 
-
-
-
-
-
 class PurchasedListing(models.Model):
     #Change author to correspond to account eventually
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)

@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'listing.apps.ListingConfig',
     'transaction.apps.TransactionConfig',
-    'chat.apps.ChatConfig'
+    'chat.apps.ChatConfig',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'finalProjectSite.wsgi.application'
+
+ASGI_APPLICATION = "finalProjectSite.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database
