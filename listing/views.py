@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.utils.html import escape
 from django.utils import timezone
 from datetime import datetime
-from .forms import ListingForm, EditListingForm, PurchasedListingForm
+from .forms import ListingForm, EditListingForm, PurchasedListingForm, PurchasedListingIDForm, checkoutForm
 from django.template import Context, Template
 from listing.models import *
 from transaction.models import *
@@ -28,23 +28,28 @@ def listing_list(request):
     context = {'my_listings': Listing.objects.filter(author=request.user)}
     context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
+
     #Use this flush to clear the system after testing
     #Transaction.objects.all().delete()
+    itemsincart=[]
     if request.session.get('cart') is None:
         request.session['cart']=json.loads('{}')
         t = Transaction(customer=request.user)
         t.save()
         request.session['transaction'] = t.id
-        
-        
+       
+        #####
 
     if request.method == "POST":
         form = PurchasedListingForm(request.POST)
-        if form.is_valid():
+        form2 = PurchasedListingIDForm(request.POST)
+        form3 = checkoutForm(request.POST)
+        if form.is_valid() and form2.is_valid():
 
             #creating the purchased listing based on the selected one
             pl = PurchasedListing.create(request.POST.get('author'),request.POST.get('title'),request.POST.get('file_path'),request.POST.get('text'),request.POST.get('price'))
             pl.transaction=Transaction.objects.get(id=request.session['transaction'])
+            pl.parent = Listing.objects.get(id=request.POST.get('id'))
             pl.save()
             #getting the cart from session
             cart2 = request.session.get('cart')
@@ -61,7 +66,47 @@ def listing_list(request):
                     #this is more robust, puts the whole object in the session, above is simpler
                     #cart3[slug]=serializers.serialize("json", PurchasedListing.objects.filter(id=pl.id))
             request.session['cart']=json.dumps(cart3)
-            print(request.session['cart'])
+            
+
+
+        #handling removing objects from the cart
+        if request.POST.get('id') is not None and int(request.POST.get('id')) != -1 and request.POST.get('author') is None:
+            print (request.POST.get('id'))
+            delkey=None
+            #getting the key of the item to be removed
+            for i,j in json.loads(request.session.get('cart')).items():
+                if j == int(request.POST.get('id')):
+                    delkey=i
+                    
+            #removing the object from the session, and deleting the obect itself
+            cart3 = json.loads(request.session.get('cart'))
+            del cart3[delkey]
+            request.session['cart']=json.dumps(cart3)
+
+            print('deleted:' + str(delkey))
+            PurchasedListing.objects.get(id=request.POST.get('id')).delete()
+
+        #handles the management of the cart object
+        if request.POST.get('pl') is not None:
+            for i in json.loads(request.session.get('cart')).values():
+                j = Listing.objects.get(id=(PurchasedListing.objects.get(id=i)).parent.id)
+                if j is not None:
+                    j.inventory = j.inventory-1
+                    j.save()
+            request.session['cart']='{}'
+            
+
+        print("cart:" + str(request.session['cart']))
+        
+        if isinstance(request.session.get('cart'),str):
+            pequod = json.loads(request.session.get('cart'))
+        else:
+            pequod = request.session.get('cart')
+        for i in pequod.values():
+            itemsincart.append(i)
+
+
+    context['itemcart'] = PurchasedListing.objects.filter(id__in=itemsincart) 
 
     
 

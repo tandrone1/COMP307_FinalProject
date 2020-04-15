@@ -39,6 +39,7 @@
           <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
           <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
           <input type="hidden" id="price" name="price" value={{l.price}}>
+          <input type="hidden" id="id" name="id" value={{l.id}}>
         </form>
         <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
           Edit
@@ -82,6 +83,7 @@
           <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
           <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
           <input type="hidden" id="price" name="price" value={{l.price}}>
+          <input type="hidden" id="id" name="id" value={{l.id}}>
         </form>
       </div>
     </div>
@@ -90,9 +92,48 @@
 
 {% endfor %}
 </div>
+
+{% comment %} Section for CART {% endcomment %}
+<div class="listing-section">
+<h4>CART</h4>
+{% for l in itemcart %}
+
+  <div class="card mb-3 custom-card">
+
+  <div class="row" >
+    <div class="col-md-5 listing-img">
+      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title">{{l.title}}</h5> 
+        <p class="card-text">{{l.text}}</p>
+        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        <p class="card-author">By {{l.author}}</p>
+        <form method='post' action='#'>
+          {% csrf_token %} 
+          <button type="submit" value="Remove" name='Remove'>Remove</button>
+          <input type="hidden" id="id" name="id" value="{{l.id}}">
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+
+
 <form method='post' action='#'>
   {% csrf_token %} 
-    <input type="submit" value="Buy" name="Buy"/>
+  <button type="submit" value="Checkout" name='Checkout'>Checkout</button>
+  <input type="hidden" id="pl" name="pl" value="checkout">
+
+</form>
+<!-- <form method='post' action='#'>
+  {% csrf_token %} 
+    <input type="submit" value="Checkout" name="Checkout"/> -->
 </form>
 </div>
 </div>

@@ -40,6 +40,7 @@ class PurchasedListing(models.Model):
     file_path = models.TextField(null=True)
     text = models.TextField(null=True)
     price = models.TextField(null=True)
+    parent = models.ForeignKey(Listing, on_delete=models.SET_NULL, default=None, null=True)
     #purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def __str__(self):
