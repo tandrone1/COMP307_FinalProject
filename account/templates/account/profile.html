@@ -1,0 +1,20 @@
+{% include "finalApp/header.html" %}
+{% load static %}
+
+<h2>Account Info</h2>
+
+
+<div> IMAGE </div>
+<img src="{% static 'images/'|add:account.picture %}" class="img-responsive center-img card-img custom-img " alt="..." >
+
+
+<hr />
+
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div>
+    Image: <input type="file" name="image" />
+    {{form.image.errors}}
+  <div>
+  <input type="submit" />
+</form>

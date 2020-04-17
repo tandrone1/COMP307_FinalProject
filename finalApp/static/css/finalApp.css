@@ -56,6 +56,17 @@ p{
     
 }
 
+.bidding-card{
+    width: 50%;
+    box-shadow: 0px 0px 6px 0 rgba(0, 0, 0, 0.24), 0px 5px 10px 0 rgba(0, 0, 0, 0.19);
+    margin-top:30px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.5s;
+}
+.bidding-card:hover {
+	box-shadow: 0px 0px 6px 0 #007bff, 0px 5px 10px 0 #46546c !important;
+}
+
 .custom-img{
     height:auto;
     width:90%;

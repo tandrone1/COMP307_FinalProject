@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.core.files.storage import default_storage
 from . import forms
+from django.shortcuts import redirect
 from account.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -22,6 +24,26 @@ from django.contrib import messages
 #     user.user_permissions.remove(permission, permission1)
 #     user.user_permissions.add(permission2)
 
+@login_required
+def profile(request):
+    
+    # ! TODO check the POST for an image (dont allow other files)
+    context = {}
+    context['user'] = request.user
+    context['account'] = Account.objects.get(user=request.user)
+
+    if request.method == "POST":
+        file = request.FILES['image']
+        default_storage.save(file.name, file)
+        
+        account = Account.objects.get(user=request.user)    
+        account.picture = file.name       
+        account.save()
+        return redirect('/account')
+
+    else:
+        return render(request, 'account/profile.html', context)
+
 
 def signup_action(request):
     context = {}
@@ -35,9 +57,8 @@ def signup_action(request):
                 email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password'])
                 
-              # account creation, each account linked to a user
-              # account = Account(owner=user)
-              # account.save()
+              account = Account(username=user.username, user=user)
+              account.save()
 
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:

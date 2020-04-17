@@ -4,16 +4,34 @@
 <center>
 <div>
     <button onclick="location.href = '/chat/{{user}}';" type="button" class="btn btn-primary">
-            Go to my Chatroom
+            Go to my Bidding Room
     </button>
 </div>
 
 <hr />
 <div>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Show all Bidding Rooms
+    </button>
 
-    What chat room would you like to enter?<br/>
-    <input id="room-name-input" type="text" size="100"/><br/>
-    <input id="room-name-submit" type="button" value="Enter"/>
+    <div class="collapse" id="collapseExample">
+
+    {% for u in users %}
+        <div class="card card-body bidding-card">
+
+            <b>{{u.username}}'s</b> Bidding Room
+            <a href="/chat/{{u.username}}" class="stretched-link"></a>
+
+        </div>
+    {% endfor %}
+    </div>
+    <hr />
+
+    <div>
+        Have a custom Bidding Room? Enter the name here.<br/>
+        <input id="room-name-input" type="text" size="100"/><br/>
+        <input id="room-name-submit" type="button" value="Enter"/>
+    </div>
 
 </div>
 
