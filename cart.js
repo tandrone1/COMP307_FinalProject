@@ -1,4 +1,3 @@
-<script type="text/javascript">
 
     var cartItems = new Array();
     var cartMap = new Map();
@@ -30,13 +29,18 @@
             author: author,
             img: img};
         cartItems.push(item);
-        var i = cartItems.length -1;
+        updateCart();
+        // var i = cartItems.length -1;
+        // if(autoIndex !=5){
+        //      updateCart();
+        // }
+       
+
 
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
         row.setAttribute("id", autoIndex);
         autoIndex++;
-                
         //image in cart
         var imgCell = document.createElement("TD");
         var img = document.createElement("IMG");
@@ -75,15 +79,13 @@
             //remove filler text
             var fillerText = document.getElementById("cartFiller");
             fillerText.parentNode.removeChild(fillerText);
-            var cartDiv = document.getElementById("cart");
             
 
+            var cartDiv = document.getElementById("cartDiv");
             //create total price row
             var pricePara = document.createElement("P");
             pricePara.setAttribute("id", "pricePara");
             var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
-            
-            
             pricePara.appendChild(priceText);
             cartDiv.appendChild(pricePara);
 
@@ -94,9 +96,9 @@
             var checkoutText = document.createTextNode("Checkout");
             checkoutButton.appendChild(checkoutText);
             cartDiv.appendChild(checkoutButton);
-
+           
         }else{
-            var cartDiv = document.getElementById("cart");
+            var cartDiv = document.getElementById("cartDiv");
             var priceParaRm= document.getElementById("pricePara");
             priceParaRm.parentNode.removeChild(priceParaRm);
 
@@ -112,6 +114,7 @@
 
     function removeItem(index){
         
+        
 
         for(var i=0; i < cartItems.length; i++){
            if(cartItems[i].index== index){
@@ -122,6 +125,8 @@
             }
         }
 
+        updateCart();
+        console.log(index);
         var cart = document.getElementById("cartTable");
         var removeRow = document.getElementById(index);
         cart.removeChild(removeRow);
@@ -141,7 +146,7 @@
 
         }else{
             //update price
-            var cartDiv = document.getElementById("cart");
+            var cartDiv = document.getElementById("cartDiv");
             var priceParaRm= document.getElementById("pricePara");
             priceParaRm.parentNode.removeChild(priceParaRm);
 
@@ -157,10 +162,32 @@
     }
 
     function updateCart(){
-        var cartRm = document.getElementById("cart");
-        cartRm.parentNode.removeChild(cartRm);
+
+        // //remove filler text
+        // var fillerText = document.getElementById("cartFiller");
+        // fillerText.parentNode.removeChild(fillerText);
+        
+
+        var cartList = document.getElementById("cartList");
+        var rmObj = document.getElementById("cart");
+
+        
 
         var cart = document.createElement("a");
+        cart.setAttribute("class", "nav-link dropdown-toggle");
+        cart.setAttribute("href", "/");
+        // cart.setAttribute("id", "navbarDropdownMenuLink");
+        cart.setAttribute("role", "button");
+        cart.setAttribute("data-toggle", "dropdown");
+        cart.setAttribute("aria-haspopup", "true");
+        cart.setAttribute("aria-expanded", "false");
+        cart.setAttribute("id", "cart");
+        var cartText = document.createTextNode("Cart(" + cartItems.length + ")");
+        cart.appendChild(cartText);
+
+        cartList.replaceChild(cart, rmObj);
+        // var cartList = document.getElementById("cartList");
+        // cartList.appendChild(cart);
 
     }
 
@@ -170,5 +197,5 @@
     
     }
 
-
-</script>
+    
+  

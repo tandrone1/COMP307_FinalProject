@@ -67,7 +67,9 @@ def listing_list(request):
                     #cart3[slug]=serializers.serialize("json", PurchasedListing.objects.filter(id=pl.id))
             request.session['cart']=json.dumps(cart3)
             
-
+        #request.POST.get('<thing>') correspons to <input type="hidden" id="<thing>" name="<thing>" value="checkout">
+        if request.POST.get('checkInput') is not None:
+            print("CHECKOUT" + request.POST.get('checkInput'));
 
         #handling removing objects from the cart
         if request.POST.get('id') is not None and int(request.POST.get('id')) != -1 and request.POST.get('author') is None:
