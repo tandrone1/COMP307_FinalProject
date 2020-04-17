@@ -31,9 +31,10 @@
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
         <!-- Button trigger modal -->
+        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', '{{l.text}}', {{l.price}}, '{{l.author}}', '{{l.file_path}}')">Add to Cart</button>
         <form method='post' action='#'>
           {% csrf_token %} 
-          <button type="submit" value="AddToCart" name='AddToCart'>BUY</button>
+          <button type="submit" value="AddToCart" name='AddToCart'">BUY</button>
           <input type="hidden" id="author" name="author" value="{{l.author}}">
           <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
           <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
@@ -72,9 +73,10 @@
         <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
+
         <form method='post' action='#'>
           {% csrf_token %} 
-          <button type="submit" value="AddToCart" name='AddToCart'>BUY</button>
+          <button type="submit" value="AddToCart" name='AddToCart' >BUY</button>
           <input type="hidden" id="author" name="author" value="{{l.author}}">
           <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn btn-secondary">
             Join Chatroom
@@ -112,7 +114,7 @@
         <p class="card-author">By {{l.author}}</p>
         <form method='post' action='#'>
           {% csrf_token %} 
-          <button type="submit" value="Remove" name='Remove'>Remove</button>
+          <button type="submit" value="Remove" name='Remove' >Remove</button>
           <input type="hidden" id="id" name="id" value="{{l.id}}">
 
         </form>
@@ -120,14 +122,13 @@
     </div>
   </div>
 </div>
-
+<!-- do l.id -->
 {% endfor %}
 </div>
 
-
 <form method='post' action='#'>
   {% csrf_token %} 
-  <button type="submit" value="Checkout" name='Checkout'>Checkout</button>
+  <button type="submit" value="Checkout" name='Checkout' onclick="checkout()">Checkout</button>
   <input type="hidden" id="pl" name="pl" value="checkout">
 
 </form>
@@ -138,4 +139,5 @@
 </div>
 </div>
 </center>
+
 
