@@ -23,6 +23,8 @@ class Listing(models.Model):
 
     def save(self, *args, **kwargs):
         self.edit_date = datetime.now()
+        # if self.inventory <= 0:
+        #     self.delete()
         super(Listing, self).save(*args, **kwargs)
 
 

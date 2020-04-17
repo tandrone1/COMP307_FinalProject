@@ -19,100 +19,63 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 from django.core import serializers
+from django.contrib import messages
 
 
 # Create your views here.2
 #This view gives the list view of the listings
 @login_required
 def listing_list(request):
+    
+
     context = {'my_listings': Listing.objects.filter(author=request.user)}
     context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
+    template = 'listing/listing_list.html'
 
-    #Use this flush to clear the system after testing
-    #Transaction.objects.all().delete()
-    itemsincart=[]
-    if request.session.get('cart') is None:
-        request.session['cart']=json.loads('{}')
+
+
+    if request.session.get('transaction') is None:
         t = Transaction(customer=request.user)
         t.save()
         request.session['transaction'] = t.id
-       
-        #####
-
     if request.method == "POST":
         form = PurchasedListingForm(request.POST)
         form2 = PurchasedListingIDForm(request.POST)
         form3 = checkoutForm(request.POST)
-        if form.is_valid() and form2.is_valid():
 
-            #creating the purchased listing based on the selected one
-            pl = PurchasedListing.create(request.POST.get('author'),request.POST.get('title'),request.POST.get('file_path'),request.POST.get('text'),request.POST.get('price'))
-            pl.transaction=Transaction.objects.get(id=request.session['transaction'])
-            pl.parent = Listing.objects.get(id=request.POST.get('id'))
-            pl.save()
-            #getting the cart from session
-            cart2 = request.session.get('cart')
-            if isinstance(cart2, str):
-                cart3 = json.loads(cart2)
-            else:
-                cart3 = cart2
-            isin=True
-            while(isin):
-                slug = randomString()
-                if(slug not in cart3.keys()):
-                    isin=False
-                    cart3[slug]=pl.id
-                    #this is more robust, puts the whole object in the session, above is simpler
-                    #cart3[slug]=serializers.serialize("json", PurchasedListing.objects.filter(id=pl.id))
-            request.session['cart']=json.dumps(cart3)
             
         #request.POST.get('<thing>') correspons to <input type="hidden" id="<thing>" name="<thing>" value="checkout">
-        if request.POST.get('checkInput') is not None:
+        if request.POST.get('checkInput') is not None and form3.is_valid():
             print("CHECKOUT" + request.POST.get('checkInput'));
+            bads = []
+            for i in request.POST.get('checkInput').split(","):
 
-        #handling removing objects from the cart
-        if request.POST.get('id') is not None and int(request.POST.get('id')) != -1 and request.POST.get('author') is None:
-            print (request.POST.get('id'))
-            delkey=None
-            #getting the key of the item to be removed
-            for i,j in json.loads(request.session.get('cart')).items():
-                if j == int(request.POST.get('id')):
-                    delkey=i
+                temp = Listing.objects.get(id=i)
+                if temp.inventory > 0:
+                    temp.inventory = temp.inventory - 1
+                    temp.save()
+                    tempPL = PurchasedListing(transaction=Transaction.objects.get(id=request.session['transaction']), author = temp.author, title = temp.title, file_path = temp.file_path, text = temp.text, price = temp.price, parent = temp)
+                    tempPL.save()
+                    messages.add_message(request, messages.INFO, str(temp.title) + " was purchased.")
+                else:
+                    messages.add_message(request, messages.INFO, str(temp.title) + " is out of stock.")
+                    bads.append(i)
+
+ 
+                
                     
-            #removing the object from the session, and deleting the obect itself
-            cart3 = json.loads(request.session.get('cart'))
-            del cart3[delkey]
-            request.session['cart']=json.dumps(cart3)
-
-            print('deleted:' + str(delkey))
-            PurchasedListing.objects.get(id=request.POST.get('id')).delete()
-
-        #handles the management of the cart object
-        if request.POST.get('pl') is not None:
-            for i in json.loads(request.session.get('cart')).values():
-                j = Listing.objects.get(id=(PurchasedListing.objects.get(id=i)).parent.id)
-                if j is not None:
-                    j.inventory = j.inventory-1
-                    j.save()
-            request.session['cart']='{}'
+            print(Listing.objects.filter(id__in = bads))
+            template = 'listing/listing_checkout.html'
+            context = {'OOS_listings': Listing.objects.filter(id__in = bads)}
             
 
-        print("cart:" + str(request.session['cart']))
-        
-        if isinstance(request.session.get('cart'),str):
-            pequod = json.loads(request.session.get('cart'))
-        else:
-            pequod = request.session.get('cart')
-        for i in pequod.values():
-            itemsincart.append(i)
 
 
-    context['itemcart'] = PurchasedListing.objects.filter(id__in=itemsincart) 
 
     
 
-    return render(request, 'listing/listing_list.html', context)
+    return render(request, template, context)
 
 
 #This view is for the form to create new listings 
