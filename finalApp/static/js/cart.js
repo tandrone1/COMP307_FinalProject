@@ -53,7 +53,7 @@ var cartItems = new Array();
     function addItem(id, title, description, price, author, img){
     // console.log("item " + title + " added");
         
-        
+        //create a new item
         var item = {index:autoIndex, 
             id: id, 
             title: title,
@@ -61,14 +61,13 @@ var cartItems = new Array();
             price: price,
             author: author,
             img: img};
-        cartItems.push(item);
-        updateCart();
-        // var i = cartItems.length -1;
-        // if(autoIndex !=5){
-        //      updateCart();
-        // }
-       
 
+        //add the item to the cartItem array    
+        cartItems.push(item);
+
+        //update the number of items in the cart
+        updateCart();
+      
 
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
@@ -125,14 +124,7 @@ var cartItems = new Array();
             pricePara.appendChild(priceText);
             cartDiv.appendChild(pricePara);
 
-            //create checkout button
-            // var checkoutButton =document.createElement("BUTTON");
-            // checkoutButton.setAttribute("type", "submit");
-            // checkoutButton.setAttribute("onclick", "checkout()");
-            // checkoutButton.setAttribute("id", "checkout");
-            // var checkoutText = document.createTextNode("Checkout");
-            // checkoutButton.appendChild(checkoutText);
-            // cartDiv.appendChild(checkoutButton);
+          
             createCheckoutButton();
            
         }else{
