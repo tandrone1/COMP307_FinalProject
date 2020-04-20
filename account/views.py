@@ -14,6 +14,8 @@ from account.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from django.contrib import messages
+from transaction.models import Transaction
+from listing.models import PurchasedListing
 
 # LEAVE IN CASE WE NEED TO EDIT PERMISSIONS 
 # def set_permissions(user):
@@ -99,3 +101,20 @@ def logout_action(request):
 
     logout(request)
     return HttpResponseRedirect(reverse('login'))
+
+@login_required
+def history_action(request):
+    context = {}
+    if request.user.is_authenticated:
+        transactions = Transaction.objects.filter(customer=request.user)
+        pl={}
+        carts={}
+        for t in transactions:
+            # print(t.id)
+            cart = PurchasedListing.objects.filter(transaction=t)
+            pl={str(t.date.strftime("%c")):cart}
+            carts.update(pl)
+        
+        context['carts'] = carts
+        print(context)
+    return render(request, 'account/history.html', context)

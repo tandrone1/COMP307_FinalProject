@@ -1,0 +1,36 @@
+{% load static %}
+{% include "finalApp/header.html" %}
+
+<center>
+
+<div class="listing-section">
+<h3>Order History</h3>
+
+
+
+<!-- PROBABLY WANT TO MAKE THE CARTS INTO TABLES NOT LISTS -->
+
+{% for p,c in carts.items %}
+  <h3>{{p}}</h3>
+  {% for l in c %}
+    <div class="card mb-3 custom-card">
+
+    <div class="row" >
+      <div class="col-md-5 listing-img">
+        <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+      </div>
+      <div class="col-md-7">
+        <div class="card-body">
+          <h5 class="card-title">{{l.title}}</h5> 
+          <p class="card-text">{{l.text}}</p>
+          <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+          <p class="card-author">By {{l.author}}</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  {% endfor %}
+{% endfor %}
+</div>
+
+</center>
