@@ -91,7 +91,7 @@ def login_action(request):
 
 @login_required
 def logout_action(request):
-    messages.info(request, 'Logout complete.')
+    messages.add_message(request, messages.INFO, 'Logout complete.')
 
     if request.user.is_authenticated:
         channel_layer = get_channel_layer()

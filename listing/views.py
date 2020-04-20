@@ -35,39 +35,31 @@ def listing_list(request):
 
 
 
-    if request.session.get('transaction') is None:
-        t = Transaction(customer=request.user)
-        t.save()
-        request.session['transaction'] = t.id
+    #checks if the checkout button was pushed
     if request.method == "POST":
-        form = PurchasedListingForm(request.POST)
-        form2 = PurchasedListingIDForm(request.POST)
         form3 = checkoutForm(request.POST)
 
-            
-        #request.POST.get('<thing>') correspons to <input type="hidden" id="<thing>" name="<thing>" value="checkout">
+        #if the button was pressed then move to gathering data    
         if request.POST.get('checkInput') is not None and form3.is_valid():
             print("CHECKOUT" + request.POST.get('checkInput'));
             bads = []
-            for i in request.POST.get('checkInput').split(","):
+            goods = []
+            cart = request.POST.get('checkInput').split(",")
+            for i in cart:
 
                 temp = Listing.objects.get(id=i)
+                #creating lists of items that were purchased, and failed to be purchased
                 if temp.inventory > 0:
-                    temp.inventory = temp.inventory - 1
-                    temp.save()
-                    tempPL = PurchasedListing(transaction=Transaction.objects.get(id=request.session['transaction']), author = temp.author, title = temp.title, file_path = temp.file_path, text = temp.text, price = temp.price, parent = temp)
-                    tempPL.save()
-                    messages.add_message(request, messages.INFO, str(temp.title) + " was purchased.")
+                    goods.append(i)
                 else:
-                    messages.add_message(request, messages.INFO, str(temp.title) + " is out of stock.")
                     bads.append(i)
 
  
                 
-                    
-            print(Listing.objects.filter(id__in = bads))
-            template = 'listing/listing_checkout.html'
-            context = {'OOS_listings': Listing.objects.filter(id__in = bads)}
+            request.session['bads']=bads
+            request.session['goods']=goods
+            return redirect('/transaction/checkout')
+
             
 
 
