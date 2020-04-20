@@ -20,6 +20,8 @@ from django.core.files.storage import default_storage
 from django.shortcuts import redirect
 from django.core import serializers
 from django.contrib import messages
+import requests
+
 
 
 # Create your views here.2
@@ -32,8 +34,6 @@ def listing_list(request):
     context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
     template = 'listing/listing_list.html'
-
-
 
     #checks if the checkout button was pushed
     if request.method == "POST":
