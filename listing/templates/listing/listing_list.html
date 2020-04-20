@@ -36,17 +36,8 @@
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
         <!-- Button trigger modal -->
-        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', '{{l.text}}', {{l.price}}, '{{l.author}}', '{{l.file_path}}')">Add to Cart</button>
-        <form method='post' action='#'>
-          {% csrf_token %} 
-          <button type="submit" value="AddToCart" name='AddToCart'">BUY</button>
-          <input type="hidden" id="author" name="author" value="{{l.author}}">
-          <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
-          <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
-          <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
-          <input type="hidden" id="price" name="price" value={{l.price}}>
-          <input type="hidden" id="id" name="id" value={{l.id}}>
-        </form>
+        <!-- Probably dont want people buying their own stuff right? -->
+        <!-- <button type="button"onclick="addItem({{l.id}},'{{l.title}}', '{{l.text}}', {{l.price}}, '{{l.author}}', '{{l.file_path}}')">Add to Cart</button> -->
         <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
           Edit
         </button>
@@ -78,20 +69,11 @@
         <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
+        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', '{{l.text}}', {{l.price}}, '{{l.author}}', '{{l.file_path}}')">Add to Cart</button>
+        <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn btn-secondary">
+          Join Chatroom
+        </button>
 
-        <form method='post' action='#'>
-          {% csrf_token %} 
-          <button type="submit" value="AddToCart" name='AddToCart' >BUY</button>
-          <input type="hidden" id="author" name="author" value="{{l.author}}">
-          <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn btn-secondary">
-            Join Chatroom
-          </button>
-          <input type="hidden" type = "text" id="title" name="title" value="{{l.title}}">
-          <input type="hidden" id="file_path" name="file_path" value="{{l.file_path}}">
-          <input type="hidden" type = "text" id="text" name="text" value="{{l.text}}">
-          <input type="hidden" id="price" name="price" value={{l.price}}>
-          <input type="hidden" id="id" name="id" value={{l.id}}>
-        </form>
       </div>
     </div>
   </div>
@@ -99,48 +81,6 @@
 
 {% endfor %}
 </div>
-
-{% comment %} Section for CART {% endcomment %}
-<div class="listing-section">
-<h4>CART</h4>
-{% for l in itemcart %}
-
-  <div class="card mb-3 custom-card">
-
-  <div class="row" >
-    <div class="col-md-5 listing-img">
-      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
-    </div>
-    <div class="col-md-7">
-      <div class="card-body">
-        <h5 class="card-title">{{l.title}}</h5> 
-        <p class="card-text">{{l.text}}</p>
-        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
-        <p class="card-author">By {{l.author}}</p>
-        <form method='post' action='#'>
-          {% csrf_token %} 
-          <button type="submit" value="Remove" name='Remove' >Remove</button>
-          <input type="hidden" id="id" name="id" value="{{l.id}}">
-
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- do l.id -->
-{% endfor %}
-</div>
-
-<form method='post' action='#'>
-  {% csrf_token %} 
-  <button type="submit" value="Checkout" name='Checkout' onclick="checkout()">Checkout</button>
-  <input type="hidden" id="pl" name="pl" value="checkout">
-
-</form>
-<!-- <form method='post' action='#'>
-  {% csrf_token %} 
-    <input type="submit" value="Checkout" name="Checkout"/> -->
-</form>
 </div>
 </div>
 </center>

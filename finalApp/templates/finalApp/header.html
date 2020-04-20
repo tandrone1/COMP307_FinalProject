@@ -55,7 +55,7 @@
                     <a class="nav-link" href="/chat">Chat</a>
                 </li>
                 <li class="nav-item dropdown" id = "cartList">
-                    <a class="nav-link dropdown-toggle" href="/" id="cart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "cart">Cart (0)</a> <!-- //make this into a dropdown -->
+                    <a class="nav-link dropdown-toggle" href="/" id="cart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "cart">Cart (0)</a> 
                     <div class="dropdown-menu" id = "cartDiv" aria-labelledby="navbarDropdownMenuLink">
                         <table id = "cartTable" class="dropdown-item">
                             <p id="cartFiller">Empty cart</p>
@@ -63,8 +63,7 @@
                         
                         <form method='post' action='#' id="checkoutForm">
                         {% csrf_token %}     
-  <!-- <button type="submit" value="Checkout" name='Checkout' onclick="checkout()">Checkout</button>
-  <input type="hidden" id="pl" name="pl" value="checkout"> -->
+
 
                         </form>
                     </div>

@@ -1,0 +1,46 @@
+{% load static %}
+{% include "finalApp/header.html" %}
+
+<center>
+	<div>
+		{% if messages %}
+		<ul class="messages">
+		    {% for message in messages %}
+		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+{% comment %} Section for MY LISTINGS {% endcomment %}
+<div class="listing-section">
+
+{% if OOS_Listings%}
+<h4>Out of Stock</h4>
+{%endif%}
+
+{% for l in OOS_listings %}
+
+  <div class="card mb-3 custom-card">
+
+  <div class="row" >
+    <div class="col-md-5 listing-img">
+      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+    </div>
+    <div class="col-md-7">
+      <div class="card-body">
+        <h5 class="card-title">{{l.title}}</h5> 
+        <p class="card-text">{{l.text}}</p>
+        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+        <p class="card-author">By {{l.author}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+</div>
+
+
+
+</center>

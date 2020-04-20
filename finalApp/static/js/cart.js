@@ -279,14 +279,14 @@ var cartItems = new Array();
     function itemIDstoString(){
 
 
-        var IDstr = "{";
+        var IDstr = "";
         for(var i=0; i<cartItems.length;i++){
             IDstr += cartItems[i].id;
             if(i<cartItems.length-1){
                 IDstr+=",";
             }
         }
-        IDstr +="}";
+        IDstr +="";
         // console.log(IDstr);
         itemIDString = IDstr;
 

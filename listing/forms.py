@@ -30,4 +30,4 @@ class PurchasedListingIDForm(ModelForm):
         fields = ['id']
 
 class checkoutForm(forms.Form):
-	pl = forms.CharField(label='pl', max_length=100)
+	checkInput = forms.CharField(label='checkInput', max_length=100)
