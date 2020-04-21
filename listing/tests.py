@@ -24,3 +24,12 @@ class TestCase1(TestCase):
 		l.delete()
 		self.assertIsNotNone(pl)
 		print('PurchasedListing persistence verified')
+
+	def test_2(self):
+		testuser1 = User.objects.create(username='testuser1')
+		testuser1.save()
+		l = Listing.objects.create(author=testuser1,title="test",file_path=None,text="Lorem Ipsum",price=10,inventory=10)
+		l.save()
+		testuser1.delete()
+		print(l)
+		self.assertIsNone(l)
