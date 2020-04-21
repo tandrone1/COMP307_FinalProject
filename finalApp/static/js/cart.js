@@ -312,7 +312,6 @@
         var cart = document.createElement("a");
         cart.setAttribute("class", "nav-link dropdown-toggle");
         cart.setAttribute("href", "/");
-        // cart.setAttribute("id", "navbarDropdownMenuLink");
         cart.setAttribute("role", "button");
         cart.setAttribute("data-toggle", "dropdown");
         cart.setAttribute("aria-haspopup", "true");

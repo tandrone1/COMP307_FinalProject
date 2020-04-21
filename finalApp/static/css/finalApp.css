@@ -18,7 +18,7 @@ h5{
     font-weight: bold;
 }
 p{
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 1rem;
 }
 
@@ -133,15 +133,9 @@ p{
     color: #6c757d;
     font-weight: medium bold;
     font-size: 0.9rem;
-    /*border: 2px solid #6c757d;*/
-    /*border-radius: .25rem;*/
     line-height: 1;
     padding-top: 1rem;
-    /*padding: .375rem .75rem;
-    padding-top: 0.375rem;
-    padding-right: 0.75rem;
-    padding-bottom: 0.375rem;
-    padding-left: 0.75rem;*/
+
 }
 .icon-btn{
     background-color: black;
@@ -213,4 +207,20 @@ p{
 .account-forms{
     width:20%;
 
+}
+
+.checkout-img{
+    width: 150px;
+    padding: 1rem;
+}
+
+.edit-button{
+    background: none;
+    border: none;
+    color: #A6A6A6;
+    font-weight: medium bold;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding-top: 1rem;
+    
 }
