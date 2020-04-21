@@ -21,16 +21,16 @@
         if(typeof(Storage)!=="undefined"){
 
             var cart = document.getElementById("cartDiv").innerHTML;
-            sessionStorage.setItem('cart', cart);
+            window.localStorage.setItem('cart', cart);
 
-            sessionStorage.setItem('cartMap', JSON.stringify(Array.from( cartMap.entries() ) ) );
+            window.localStorage.setItem('cartMap', JSON.stringify(Array.from( cartMap.entries() ) ) );
 
-            sessionStorage.setItem('totalItems',JSON.stringify(totalItems));
+            window.localStorage.setItem('totalItems',JSON.stringify(totalItems));
             
 
-            sessionStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+            window.localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
 
-            sessionStorage.setItem('itemIDString', itemIDString);
+            window.localStorage.setItem('itemIDString', itemIDString);
             // var item = new Map(JSON.parse(sessionStorage.getItem('cartMap')));
 
         }
@@ -39,20 +39,20 @@
     function loadCart(){
         
         //load objects
-        cartMap = new Map(JSON.parse(sessionStorage.getItem('cartMap')));
+        cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
 
-        totalItems = JSON.parse(sessionStorage.getItem('totalItems'));
+        totalItems = JSON.parse(window.localStorage.getItem('totalItems'));
         console.log(totalItems);
 
-        totalPrice =JSON.parse(sessionStorage.getItem('totalPrice'));
+        totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
 
-        itemIDString = sessionStorage.getItem('itemIDString');
+        itemIDString = window.localStorage.getItem('itemIDString');
 
         //load the UI
         var cart = document.getElementById("cartDiv");
-        if(sessionStorage.getItem('cart')!=null){
+        if(window.localStorage.getItem('cart')!=null){
             console.log("not null");
-            cart.innerHTML = sessionStorage.getItem('cart');
+            cart.innerHTML = window.localStorage.getItem('cart');
             updateCart();
         }
 
@@ -86,11 +86,12 @@
         input.setAttribute("value", itemIDString);
 
         form.appendChild(input);
+        // document.getElementById("checkout").addEventListener("click", buy);
 
     }
 
     function addItem(id, title, price, img){
-        console.log("item " + id);
+        
         totalItems++;
         //create a new item
         var item = { 
@@ -255,7 +256,7 @@
             //remove it
             cartMap.delete(id);
             var cart = document.getElementById("cartTable");
-            console.log("attempting removal " + id);
+            
             var removeRow = document.getElementById(id);
             removeRow.parentNode.removeChild(removeRow);
         }
@@ -274,6 +275,8 @@
 
     }
 
+    
+    
     function loadEmptyCart(){
         //remove checkout button
         var checkoutButton = document.getElementById("checkout");
@@ -319,8 +322,7 @@
         
 
     }
-
-
+    
     function itemIDstoString(){
         
         var IDstr = "";

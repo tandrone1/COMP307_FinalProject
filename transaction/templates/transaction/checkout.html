@@ -1,6 +1,5 @@
 {% load static %}
 {% include "finalApp/header.html" %}
-
 <center>
 	<div>
 		{% if messages %}
@@ -66,9 +65,19 @@
   </div>
 </div>
 
-{% endfor %}
+{% endfor %} 
 </div>
 <form method='post' action='#'>
   {%csrf_token%}
-  <input type="submit" value="buy" name="buy"/>
+  <!-- <button type="submit" value="buy" name="buy" id="buy">Buy</button> -->
+  <input type="submit" value="buy" name="buy" id="buy" />
 </form>
+
+<script type="text/javascript">
+  document.getElementById("buy").addEventListener("click", buy);
+  function buy(){
+    
+    window.localStorage.clear();
+  }
+
+</script>
