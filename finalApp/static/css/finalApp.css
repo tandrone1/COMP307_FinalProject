@@ -7,20 +7,25 @@ body{
 
 }
 
-h2{
+.header-text{
     font-family: 'Quicksand', sans-serif;
     font-size: 1.75rem;
     color: #4d4d4d;
+    padding: 1rem;
 }
 h5{
     font-family: 'Roboto';
     font-size: 1.5rem;
     font-weight: bold;
 }
+small{
+    font-size: 0.8rem;
+}
 p{
     font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
+    font-size: 0.90rem;
 }
+
 
 .header-content{
     padding: 20px;
@@ -222,5 +227,6 @@ p{
     font-size: 0.9rem;
     line-height: 1;
     padding-top: 1rem;
-    
+
 }
+s

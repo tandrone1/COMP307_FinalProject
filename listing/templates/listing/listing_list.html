@@ -92,26 +92,28 @@
     </div>
     <div class="col-md-7">
       <div class="card-body">
-        <h5 class="card-title">{{l.title}}</h5> 
-        <p class="card-text">{{l.text}}</p>
-        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        <h4 class="card-title" align="left">{{l.title}}</h4> 
+        <h5 class="card-price" align="left">${{l.price}}</h5>
+        <p class="card-text" align="left">{{l.text}}</p>
+        
+        <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
+          <br>
+          <small class="text-muted">Last updated at {{l.edit_date}}</small>
+          <br>
+          <small class="text-text">By {{l.author}}</small>
+        </p>
+  
+        <!-- <p align = "right" ><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
+        <p class="card-author" align = "right"><small class="text-text">By {{l.author}}</small></p> -->
         {% if l.inventory > 0 %}
-        <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
         {% else %}
-        <p class="card-inventory"><small class="text-text">SOLD OUT</small></p>
-        {% endif %}
-        <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
-        <p class="card-author">By {{l.author}}</p>
-        {% if l.inventory > 0 %}
-          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">Add to Cart</button>
-        {% else %}
-          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary" disabled="true">Add to Cart</button>
+          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary" disabled="true">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Sold out</button>
         {% endif %}
         <br>
-       
         <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">
           Join Chatroom
-        </button>
+        </button> 
 
       </div>
     </div>
