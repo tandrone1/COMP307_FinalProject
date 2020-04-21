@@ -7,19 +7,26 @@
 </ul>
 {% endif %}
 
+<center>
 <h2>Login</h2>
 <div>{{ form.non_field_errors }}</div>
-
+<div class="account-forms"> 
 <form action="" method="post">
     {% csrf_token %}
     <p>
-      Username: <input type="text" name="username" />
+      Username: <input type="text" name="username" class="form-control"/>
       {{ form.username.errors }}
     </p>
-      Password: <input type="password" name="password" />
+      Password: <input type="password" name="password" class="form-control"/>
       {{ form.password.errors }}
     </p>
     <p>
       <input type="submit" value="Login" />
     </p>
 </form>
+</div>
+
+<a href="/account/signup">New? Create account here.</a>
+
+</center>
+

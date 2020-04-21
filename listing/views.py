@@ -10,6 +10,7 @@ from .forms import ListingForm, EditListingForm, PurchasedListingForm, Purchased
 from django.template import Context, Template
 from listing.models import *
 from transaction.models import *
+from account.models import *
 import json
 import string
 import random
@@ -31,7 +32,6 @@ def listing_list(request):
     
 
     context = {'my_listings': Listing.objects.filter(author=request.user)}
-    context['user'] = request.user 
     context['listings'] = Listing.objects.exclude(author=request.user)
     template = 'listing/listing_list.html'
 
@@ -59,13 +59,6 @@ def listing_list(request):
             request.session['bads']=bads
             request.session['goods']=goods
             return redirect('/transaction/checkout')
-
-            
-
-
-
-
-    
 
     return render(request, template, context)
 
