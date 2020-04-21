@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from channels.layers import get_channel_layer
 from django.contrib.auth.models import User
+from account.models import *
 
 
 
@@ -23,8 +24,13 @@ def index(request):
 @login_required
 def room(request, room_name=None):
 
-    return render(request, 'chat/room.html', {
-        'room_name': room_name,
-        'user': request.user
-    })
+    context = {}
+    context['user'] = request.user
+    context['room_name'] = room_name
+    try:
+        context['room_user'] = Account.objects.get(username=room_name)
+    except Account.DoesNotExist:
+        context['room_user'] = []
+    
+    return render(request, 'chat/room.html', context)
     

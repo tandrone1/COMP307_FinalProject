@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from django.contrib import messages
 from transaction.models import Transaction
-from listing.models import PurchasedListing
+from listing.models import *
 
 # LEAVE IN CASE WE NEED TO EDIT PERMISSIONS 
 # def set_permissions(user):
@@ -29,13 +29,13 @@ from listing.models import PurchasedListing
 @login_required
 def profile(request):
     
-    # ! TODO check the POST for an image (dont allow other files)
     context = {}
     context['user'] = request.user
     context['account'] = Account.objects.get(user=request.user)
+    context['my_listings'] = Listing.objects.filter(author=request.user)
 
     if request.method == "POST":
-        file = request.FILES['image']
+        file = request.FILES['profile-picture']
         default_storage.save(file.name, file)
         
         account = Account.objects.get(user=request.user)    
@@ -59,7 +59,7 @@ def signup_action(request):
                 email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password'])
                 
-              account = Account(username=user.username, user=user)
+              account = Account(username=user.username, user=user, picture='default-profile-picture.jpg')
               account.save()
 
               return HttpResponseRedirect(reverse('login'))

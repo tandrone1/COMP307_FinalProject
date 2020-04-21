@@ -1,6 +1,5 @@
 {% load static %}
 {% include "finalApp/header.html" %}
-
 <center>
 	<div>
 		{% if messages %}
@@ -45,10 +44,32 @@
 {% if IS_Listings%}
 <h4>Still in Cart</h4>
 {%endif%}
-
+<table>
 {% for l in IS_Listings %}
 
-  <div class="card mb-3 custom-card">
+  <tr>
+    <td>
+      <!-- img -->
+      <img src="{% static 'images/'|add:l.file_path %}" class="checkout-img" alt="..." >
+    </td>
+    <td class="titleCell">
+      <!-- name and price -->
+      <h5>{{l.title}}</h5>
+      <p class="card-price">${{l.price}}</p>
+      
+    </td>
+    <td>
+      <!-- text -->
+      <p class="card-text">{{l.text}}</p>
+      
+      <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
+
+    </td>
+  </tr>
+
+
+
+<!-- <div class="card mb-3 custom-card">
 
   <div class="row" >
     <div class="col-md-5 listing-img">
@@ -64,11 +85,22 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
-{% endfor %}
+{% endfor %} 
+</table>
 </div>
 <form method='post' action='#'>
   {%csrf_token%}
-  <input type="submit" value="buy" name="buy"/>
+  <!-- <button type="submit" value="buy" name="buy" id="buy">Buy</button> -->
+  <input type="submit" value="Buy" name="buy" id="buy" class="btn btn-primary"/>
 </form>
+
+<script type="text/javascript">
+  document.getElementById("buy").addEventListener("click", buy);
+  function buy(){
+    
+    window.localStorage.clear();
+  }
+
+</script>

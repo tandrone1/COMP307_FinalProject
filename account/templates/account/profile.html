@@ -1,20 +1,73 @@
 {% include "finalApp/header.html" %}
 {% load static %}
 
-<h2>Account Info</h2>
+
+{% comment %} <img src="{% static 'images/default-background.jpg' %}" class="img-responsive " alt="..." >
+ {% endcomment %}
+ <div class="background-container">
+ </div>
 
 
-<div> IMAGE </div>
-<img src="{% static 'images/'|add:account.picture %}" class="img-responsive center-img card-img custom-img " alt="..." >
+<div class="card-deck custom-deck">
+  <div class="card profile-card">
+    <div class="card-body">
+    <center>
+      <img src="{% static 'images/'|add:account.picture %}" style="margin-bottom: 1rem;" class="img-responsive center-img profile-image" alt="..." >
+      <h5><b>{{user}}</b></h5>
+        <form action="" method="post" style="margin-top: 3rem;" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="profile-picture" id="image" accept="image/*" required>
+          <label class="custom-file-label" for="image">Choose image...</label>
+          <div class="invalid-feedback">Example invalid custom file feedback</div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Change Picture</button>
+      </form>
+      
+      <div class="profile-bottom">
+      <button type="button" onclick="location.href='/account/history'" class="btn btn-secondary btn-block">See Order History</button>
+      <button type="button" onclick="location.href='/account/logout'" class="btn btn-danger btn-block">Logout</button>
+      </div>
+
+    </center>
+    </div>
+  </div>
+  <div class="card profile-card profile-card-account">
+    <div class="card-body">
+      <h2 class="card-title" style="margin-bottom: 1.5rem;">Listings</h2>
+      <div class="profile-listings">
+
+          {% if not my_listings %}
+            <p>No Listings!</p>
+            <a href="/listing/create">Create one here</a>
+          {% endif %}
+        
+          {% for l in my_listings %}
+
+          <div class="card mb-3 custom-card">
+
+          <div class="row" >
+            <div class="col-md-5 listing-img">
+              <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+            </div>
+            <div class="col-md-7">
+              <div class="card-body">
+                <h5 class="card-title">{{l.title}}</h5> 
+                <p class="card-text">{{l.text}}</p>
+                <p class="card-price"><small class="text-text">${{l.price}}
+                <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+                <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
+                <button onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="btn btn-secondary">
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
 
 
-<hr />
-
-<form action="" method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div>
-    Image: <input type="file" name="image" />
-    {{form.image.errors}}
-  <div>
-  <input type="submit" />
-</form>

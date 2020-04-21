@@ -2,12 +2,19 @@
 {% include "finalApp/header.html" %}
 
 <center>
-<h3>{{room_name}}'s Bidding Room</h3>
+
+{% if not room_user %}
+    <h3>Custom Bidding Room - {{room_name}}</h3>
+{% else %}
+    <h3>{{room_name}}'s Bidding Room</h3>
+    <img src="{% static 'images/'|add:room_user.picture %}" style="margin-bottom: 1rem;" class="img-responsive center-img profile-image" alt="..." >
+
+{% endif %}
 <div>
 
     <div class="card mb-3 custom-card scrollable-container"></div>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
+    <input id="chat-message-input"  style="width: 50%" type="text" size="50" class="form-control">
+    <button id="chat-message-submit" style="margin-top:1rem" type="button" class="btn btn-success" value="Send">Send</button>
 
     <div>
         
@@ -29,6 +36,7 @@
         var message = data['message'];
         var user = data['user'];
         var type = data['type'];
+        var user_picture = data['user_picture'];
 
         if(type == 'meta'){
             $( ".scrollable-container" ).append( '<p class="muted">' + user + ' ' + message + '</p>' );
@@ -36,10 +44,10 @@
         else{
         
             if(account == user){
-                $( ".scrollable-container" ).append( '<p class="user-message">' + message + '</p>' );
+                $( ".scrollable-container" ).append( '<p class="user-message">' + 'You: ' + message + '</p>' );
             }
             else{
-                $( ".scrollable-container" ).append( '<p class="other-message">' + user + ': ' + message + '</p>' );
+                $( ".scrollable-container" ).append( '<p class="other-message"><img src="/static/images/' + user_picture + '" class="img-responsive center-img profile-image chat-image" alt="..." >' + user + ': ' + message + '</p>' );
             }
             
         }

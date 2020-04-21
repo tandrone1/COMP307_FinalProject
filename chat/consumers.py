@@ -3,6 +3,7 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 from channels.auth import get_user, logout
 from django.contrib.auth.models import User
+from account.models import Account
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -68,6 +69,12 @@ class ChatConsumer(WebsocketConsumer):
             message = message
         else:
             message = 'Anonymous: ' + message
+            
+        try:
+            account = Account.objects.get(username=user)
+            user_picture = account.picture
+        except Account.DoesNotExist:
+            user_picture = ''
         
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -76,7 +83,8 @@ class ChatConsumer(WebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'message_type': 'default',
-                'user': user.username
+                'user': user.username,
+                'user_picture': user_picture
             }
         )
     
@@ -85,11 +93,17 @@ class ChatConsumer(WebsocketConsumer):
         message = event['message']
         message_type = event['message_type']
         user = event['user']
+        if message_type == 'meta':
+            user_picture = ''
+        else:
+            user_picture = event['user_picture']
+            
         # Send message to WebSocket
         self.send(text_data=json.dumps({
             'message': message,
             'type': message_type,
-            'user': user
+            'user': user,
+            'user_picture': user_picture
         }))
     
     # Receive message from username group - when you logout from another tab 

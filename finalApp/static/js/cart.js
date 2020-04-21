@@ -1,13 +1,13 @@
-var cartItems = new Array();
+//global variables
     var cartMap = new Map();
-    var autoIndex = 0;
+    var totalItems = 0;
     var totalPrice = 0;
     var itemIDString = "";
 
     function insertCartMap(key, value){
         if(cartMap.has(key)){
             var items = cartMap.get(key);
-            items.add(value);
+            items.push(value);
             cartMap.set(key, items);
         }else{
             var items = new Array();
@@ -16,205 +16,291 @@ var cartItems = new Array();
 
         }
     }
+
+    function storeCart(){
+        if(typeof(Storage)!=="undefined"){
+
+            var cart = document.getElementById("cartDiv").innerHTML;
+            window.localStorage.setItem('cart', cart);
+
+            window.localStorage.setItem('cartMap', JSON.stringify(Array.from( cartMap.entries() ) ) );
+
+            window.localStorage.setItem('totalItems',JSON.stringify(totalItems));
+            
+
+            window.localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
+
+            window.localStorage.setItem('itemIDString', itemIDString);
+            // var item = new Map(JSON.parse(sessionStorage.getItem('cartMap')));
+
+        }
+    }
+
+    function loadCart(){
+        
+        //load objects
+        cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
+
+        totalItems = JSON.parse(window.localStorage.getItem('totalItems'));
+        
+
+        totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
+
+        itemIDString = window.localStorage.getItem('itemIDString');
+
+        //load the UI
+        var cart = document.getElementById("cartDiv");
+        if(window.localStorage.getItem('cart')!=null){
+            console.log("not null");
+            cart.innerHTML = window.localStorage.getItem('cart');
+            updateCart();
+        }
+
+        
+    }
     
     function createCheckoutButton(){
-        // var form = document.createElement("FORM");
-        // form.setAttribute("method", 'post');
-        // form.setAttribute("action", '#');
 
-        // var csrf_token = document.createTextNode(" {% csrf_token %} ");
-        // form.appendChild(csrf_token);
         var form = document.getElementById("checkoutForm");
+
+        
 
         var checkoutButton =document.createElement("BUTTON");
         checkoutButton.setAttribute("type", "submit");
         checkoutButton.setAttribute("value", "Checkout");
         checkoutButton.setAttribute("name", "Checkout");
-        // checkoutButton.setAttribute("onclick", "checkout()");
+        checkoutButton.setAttribute("class", "btn btn-primary");
+
         checkoutButton.setAttribute("id", "checkout"); 
         var checkoutText = document.createTextNode("Checkout");
         checkoutButton.appendChild(checkoutText);
 
+        
         form.appendChild(checkoutButton);
 
         var input = document.createElement("INPUT");
         input.setAttribute("type", "hidden");
         input.setAttribute("id", "checkInput");
         input.setAttribute("name", "checkInput");
-        itemIDstoString();
+        
+
         input.setAttribute("value", itemIDString);
 
         form.appendChild(input);
+        // document.getElementById("checkout").addEventListener("click", buy);
 
-        // var cartDiv = document.getElementById("cartDiv");
-        // cartDiv.appendChild(form);
     }
 
-    function addItem(id, title, description, price, author, img){
-    // console.log("item " + title + " added");
+    function addItem(id, title, price, img){
         
-        
-        var item = {index:autoIndex, 
+        totalItems++;
+        //create a new item
+        var item = { 
             id: id, 
             title: title,
-            description: description,
             price: price,
-            author: author,
             img: img};
-        cartItems.push(item);
+
+        insertCartMap(id, item);
+        var quantity = cartMap.get(id).length;
+        //update string of ids
+        itemIDstoString();
+        //update the number of items in the cart
         updateCart();
-        // var i = cartItems.length -1;
-        // if(autoIndex !=5){
-        //      updateCart();
-        // }
-       
+        //update the price
+        totalPrice += item.price;
 
 
+        //update UI
+        if(quantity == 1){
+            UIaddNewItem(item); 
+            
+        }else{
+            updateQuantity(item.id);
+           
+        }
+
+        if(totalItems == 1){
+            
+            setUpCartUI();
+            
+        }else{
+            
+            updatePrice()
+        }
+      
+        //store the updated cart
+        storeCart()
+    
+    }
+
+    function setUpCartUI(){
+        //remove text that says "Empty Cart"
+        var fillerText = document.getElementById("cartFiller");
+        fillerText.parentNode.removeChild(fillerText);
+            
+
+        var cartDiv = document.getElementById("cartPrice");
+        //create total price row
+        var pricePara = document.createElement("P");
+        pricePara.setAttribute("id", "pricePara");
+        var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
+        pricePara.appendChild(priceText);
+        cartDiv.appendChild(pricePara);
+        createCheckoutButton();
+    }
+
+    function updatePrice(){
+        var cartPrice = document.getElementById("cartPrice");
+        var priceParaRm= document.getElementById("pricePara");
+        priceParaRm.parentNode.removeChild(priceParaRm);
+
+        pricePara = document.createElement("P");
+        pricePara.setAttribute("id", "pricePara");
+        priceText = document.createTextNode("Total: $" + totalPrice.toFixed(2));
+        pricePara.appendChild(priceText);
+        cartPrice.appendChild(pricePara);
+            
+        //update ID string
+        // var input = document.getElementById("checkInput");
+        // input.setAttribute("value", itemIDString);
+    }
+
+    function UIaddNewItem(item){
+        //updating cart UI
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
-        row.setAttribute("id", autoIndex);
-        autoIndex++;
+        row.setAttribute("id", item.id);
+        
         //image in cart
         var imgCell = document.createElement("TD");
         var img = document.createElement("IMG");
         img.setAttribute("src", "static/images/" +item.img);
-        img.setAttribute("width", "40")
+        img.setAttribute("width", "80")
         imgCell.appendChild(img);
         row.appendChild(imgCell);
 
-        //name of item in cart
+        //name and price item in cart
         var titleCell = document.createElement("TD");
-        var title = document.createTextNode(title);
-        titleCell.appendChild(title);
+        var titleBold = document.createElement("B");
+
+        var title = document.createTextNode(item.title);
+         titleBold.appendChild(title);
+        var newLine= document.createElement("BR");
+        
+
+        var priceSmall = document.createElement("SMALL");
+
+        var price = document.createTextNode("$" + item.price.toFixed(2));
+        priceSmall.appendChild(price);
+        titleCell.appendChild(titleBold);
+        titleCell.appendChild(newLine);
+        titleCell.appendChild(priceSmall);
+        titleCell.setAttribute("class", "titleCell");
         row.appendChild(titleCell);
 
-        //price in cart
-        var priceCell = document.createElement("TD");
-        var price = document.createTextNode("$" + price.toFixed(2));
-        priceCell.appendChild(price);
-        row.appendChild(priceCell);
-
-        //add to total price
-        totalPrice += item.price;
-
-        //update string of ids
-        itemIDstoString();
-
+       
         //create remove button for item
+        var removeButtonCell = document.createElement("TD");
         var removeButton = document.createElement("BUTTON");
+        removeButton.setAttribute("class", "btn icon-btn");
         removeButton.setAttribute("type", "submit");
+        removeButton.setAttribute("onclick", "removeItem(" + item.id + ")");
         var removeText = document.createTextNode("-");
         removeButton.appendChild(removeText);
-        row.appendChild(removeButton);
-        removeButton.setAttribute("onclick", "removeItem(" + item.index + ")");
-
-
-        cart.appendChild(row);
+        removeButtonCell.appendChild(removeButton);
+        row.appendChild(removeButtonCell);
         
-        if(cartItems.length==1){
-            //remove filler text
-            var fillerText = document.getElementById("cartFiller");
-            fillerText.parentNode.removeChild(fillerText);
-            
+        //create quantity cell
+        var quantity = cartMap.get(item.id).length;
+        var quantityCell = document.createElement("TD");
+        quantityCell.setAttribute("id", "qty" + item.id);
+        var quantityText = document.createTextNode(quantity);
+        quantityCell.appendChild(quantityText);
+        row.appendChild(quantityCell);
+        cart.appendChild(row);
 
-            var cartDiv = document.getElementById("cartDiv");
-            //create total price row
-            var pricePara = document.createElement("P");
-            pricePara.setAttribute("id", "pricePara");
-            var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
-            pricePara.appendChild(priceText);
-            cartDiv.appendChild(pricePara);
+        //create add button
+        var addButtonCell = document.createElement("TD");
+        var addButton = document.createElement("BUTTON");
+        addButton.setAttribute("type", "submit");
+        addButton.setAttribute("class", "btn icon-btn");
+        addButton.setAttribute("onclick", "addItem(" + item.id + ", \"" + item.title + "\"," + item.price + ",\"" + item.img + "\")");
+        var addText = document.createTextNode("+");
+        addButton.appendChild(addText);
+        addButtonCell.appendChild(addButton);
+        row.appendChild(addButtonCell);
 
-            //create checkout button
-            // var checkoutButton =document.createElement("BUTTON");
-            // checkoutButton.setAttribute("type", "submit");
-            // checkoutButton.setAttribute("onclick", "checkout()");
-            // checkoutButton.setAttribute("id", "checkout");
-            // var checkoutText = document.createTextNode("Checkout");
-            // checkoutButton.appendChild(checkoutText);
-            // cartDiv.appendChild(checkoutButton);
-            createCheckoutButton();
-           
-        }else{
-            //update total price
-            var cartDiv = document.getElementById("cartDiv");
-            var priceParaRm= document.getElementById("pricePara");
-            priceParaRm.parentNode.removeChild(priceParaRm);
 
-            pricePara = document.createElement("P");
-            pricePara.setAttribute("id", "pricePara");
-            priceText = document.createTextNode("Total: $" + totalPrice.toFixed(2));
-            pricePara.appendChild(priceText);
-            cartDiv.appendChild(pricePara);
-
-            //update ID string
-            var input = document.getElementById("checkInput");
-            input.setAttribute("value", itemIDString);
-
-        }
-    
     }
 
-    function removeItem(index){
-        
-        
+    function updateQuantity(itemID){
+        var itemQty = document.getElementById("qty" + itemID);
+        var quantity = cartMap.get(itemID).length;
+         var quantityText = document.createTextNode(quantity);
 
-        for(var i=0; i < cartItems.length; i++){
-           if(cartItems[i].index== index){
-                var price = cartItems[i].price;
-                totalPrice -= price;
-                cartItems.splice(i, 1);
-                break;
-            }
-        }
+         itemQty.replaceChild(quantityText, itemQty.childNodes[0]);
 
+
+    }
+
+    function removeItem(id){
+        
+       var price = cartMap.get(id).pop().price;
+       var newQty = cartMap.get(id).length;
+       totalPrice -= price;
+
+
+        totalItems--;
         updateCart();
-        //update string of ids
+        if(newQty > 0){
+            updateQuantity(id);
+            
+        }else{
+            //remove it
+            cartMap.delete(id);
+            var cart = document.getElementById("cartTable");
+            
+            var removeRow = document.getElementById(id);
+            removeRow.parentNode.removeChild(removeRow);
+        }
+        
         itemIDstoString();
 
-        // console.log(index);
-        var cart = document.getElementById("cartTable");
-        var removeRow = document.getElementById(index);
-        cart.removeChild(removeRow);
-
-        if(cartItems.length == 0){
-            //remove checkout button @TODO this needs to change to remove the whole form
-            var checkoutButton = document.getElementById("checkout");
-            checkoutButton.parentNode.removeChild(checkoutButton);
-            //remove checkout input
-            var checkoutInput = document.getElementById("checkInput");
-            checkoutInput.parentNode.removeChild(checkoutInput);
-
-            //add filler text
-            var emptyCart = document.createElement("p");
-            emptyCart.setAttribute("id", "cartFiller");
-            var fillerText = document.createTextNode("Empty Cart");
-            emptyCart.appendChild(fillerText);
-            cart.appendChild(emptyCart);
-
-            var priceParaRm= document.getElementById("pricePara");
-            priceParaRm.parentNode.removeChild(priceParaRm);
+        if(totalItems== 0){
+            loadEmptyCart();
 
         }else{
-            //update price
-            var cartDiv = document.getElementById("cartDiv");
-            var priceParaRm= document.getElementById("pricePara");
-            priceParaRm.parentNode.removeChild(priceParaRm);
-
-            pricePara = document.createElement("P");
-            pricePara.setAttribute("id", "pricePara");
-            priceText = document.createTextNode("Total: $" + totalPrice.toFixed(2));
-            pricePara.appendChild(priceText);
-            cartDiv.appendChild(pricePara);
-
-            //update ID string
-            var input = document.getElementById("checkInput");
-            itemIDstoString();
-            input.setAttribute("value", itemIDString);
+            updatePrice();
+           
         }
 
-        
+        storeCart();
 
+    }
+
+    
+    
+    function loadEmptyCart(){
+        //remove checkout button
+        var checkoutButton = document.getElementById("checkout");
+        checkoutButton.parentNode.removeChild(checkoutButton);
+        //remove checkout input
+        var checkoutInput = document.getElementById("checkInput");
+        checkoutInput.parentNode.removeChild(checkoutInput);
+
+        //add filler text
+        var emptyCart = document.createElement("p");
+        emptyCart.setAttribute("id", "cartFiller");
+        var fillerText = document.createTextNode("Empty Cart");
+        emptyCart.appendChild(fillerText);
+
+        var cart = document.getElementById("cartTable");
+        cart.appendChild(emptyCart);
+
+        //remove price text
+        var priceParaRm= document.getElementById("pricePara");
+        priceParaRm.parentNode.removeChild(priceParaRm);
     }
 
     function updateCart(){
@@ -223,79 +309,39 @@ var cartItems = new Array();
         var cartList = document.getElementById("cartList");
         var rmObj = document.getElementById("cart");
 
-        
-
         var cart = document.createElement("a");
         cart.setAttribute("class", "nav-link dropdown-toggle");
         cart.setAttribute("href", "/");
-        // cart.setAttribute("id", "navbarDropdownMenuLink");
         cart.setAttribute("role", "button");
         cart.setAttribute("data-toggle", "dropdown");
         cart.setAttribute("aria-haspopup", "true");
         cart.setAttribute("aria-expanded", "false");
         cart.setAttribute("id", "cart");
-        var cartText = document.createTextNode("Cart(" + cartItems.length + ")");
+
+        var cartText = document.createTextNode("Cart(" + totalItems + ")");
         cart.appendChild(cartText);
 
         cartList.replaceChild(cart, rmObj);
         
 
     }
-
     
-    function checkout(){
-        // itemIDstoString();
-
-        // // console.log("checkout");
-        // // var itemIDs = new Array();
-        // // for(var i =0; i< cartItems.length;i++){
-        // //     itemIDs.push(cartItems[i].id);
-            
-        // // }
-        // // var itemstr = itemIDstoString(itemIDs);
-
-        // var input = document.getElementById("checkInput");
-        // input.setAttribute("value", itemIDString);
-        // console.log(itemIDString);
-
-        // var form = document.createElement("FORM");
-        // form.setAttribute("method", 'post');
-        // form.setAttribute("action", '#');
-
-        // var csrf_token = document.createTextNode(" {% csrf_token %} ");
-        // form.appendChild(csrf_token);
-
-        // var checkoutButton = document.getElementById("checkout");
-        // form.appendChild(checkoutButton);
-
-        // var input = document.createElement("INPUT");
-        // input.setAttribute("type", "hidden");
-        // input.setAttribute("id", "check");
-        // input.setAttribute("name", "check");
-        // input.setAttribute("value", itemstr);
-
-        // form.appendChild(input);
-//         <form method='post' action='#'>
-//   {% csrf_token %} 
-//   <button type="submit" value="Checkout" name='Checkout' onclick="checkout()">Checkout</button>
-//   <input type="hidden" id="pl" name="pl" value="checkout">
-
-// </form>
-        // return itemIDs;
-    }
-
     function itemIDstoString(){
-
-
+        
         var IDstr = "";
-        for(var i=0; i<cartItems.length;i++){
-            IDstr += cartItems[i].id;
-            if(i<cartItems.length-1){
-                IDstr+=",";
+        
+        
+        for(var i=0; i< Array.from(cartMap.keys()).length; i++){
+            var key = Array.from(cartMap.keys())[i];
+            for(var j=0; j< cartMap.get(key).length; j++){
+                IDstr += cartMap.get(key)[j].id;
+                // console.log(cartMap.get(key)[j].id);
+                if(i < Array.from(cartMap.keys()).length-1 || j < cartMap.get(key).length-1){
+                    IDstr +=",";
+                }
             }
         }
-        IDstr +="";
-        // console.log(IDstr);
+
         itemIDString = IDstr;
 
     }

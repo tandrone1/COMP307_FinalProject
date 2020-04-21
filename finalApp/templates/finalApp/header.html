@@ -1,15 +1,15 @@
 {% load static %}
 <html>
     <head>
-        <title>The Marketplace</title>
+        <title>Art Place</title>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        
          <link rel="stylesheet" type="text/css"  href="{% static 'css/finalApp.css' %}" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+        <link rel="shortcut icon" type="image/svg" href="{% static 'images/favicon.svg' %}"/>
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&display=swap" rel="stylesheet">
@@ -41,8 +41,9 @@
 
 
     </body> -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light header-content">
-        <a class="navbar-brand" href="/"><h2>Marketplace</h2></a>
+    <body onload = "loadCart()">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light header-content" >
+        <a class="header-text" href="/"><img src="{% static 'images/favicon.svg' %}" width="50" height="50" class="d-inline-block align-middle" alt="" style="padding: 0.5rem">Art Place</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,15 +58,21 @@
                 <li class="nav-item dropdown" id = "cartList">
                     <a class="nav-link dropdown-toggle" href="/" id="cart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "cart">Cart (0)</a> 
                     <div class="dropdown-menu" id = "cartDiv" aria-labelledby="navbarDropdownMenuLink">
-                        <table id = "cartTable" class="dropdown-item">
-                            <p id="cartFiller">Empty cart</p>
+                        <table id = "cartTable" class="dropdown-item" width = 100>
+                            <p id="cartFiller" >Empty cart</p>
                         </table>
+                        <div id="cartSummary" class="cartSummary">
+                             <div id="cartPrice">
+                                
+                            </div>
+                            <form method='post' action='#' id="checkoutForm">
+                                    {% csrf_token %}     
+
+
+                            </form> 
+                           
+                        </div>
                         
-                        <form method='post' action='#' id="checkoutForm">
-                        {% csrf_token %}     
-
-
-                        </form>
                     </div>
                     
                 </li>
@@ -76,7 +83,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="/account/history">Order History</a>
                       <a class="dropdown-item" href="/account">Edit Profile</a>
-                      <a class="dropdown-item" href="/account/logout">Logout</a>  
+                      <a class="dropdown-item" href="/account/logout" id = "logout">Logout</a>  
                     </div>
                 </li>
             </ul> 
@@ -85,6 +92,16 @@
 
         </div>
     </nav>
-    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 
+    </body>
+    
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    <script type="text/javascript">
+        document.getElementById("logout").addEventListener("click", logout);
+        function logout(){
+    
+            window.localStorage.clear();
+        }
+
+    </script>
 </html>

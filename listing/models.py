@@ -31,7 +31,6 @@ def send_simple_message(email, item):
 
 
 #REAL METHODS#
-
 class Listing(models.Model):
     #Change author to correspond to account eventually
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -52,11 +51,6 @@ class Listing(models.Model):
         # if self.inventory <= 0:
         #     send_simple_message(self.author.email,self.title)
         super(Listing, self).save(*args, **kwargs)
-
-
-
-
-
 
 
 class PurchasedListing(models.Model):
