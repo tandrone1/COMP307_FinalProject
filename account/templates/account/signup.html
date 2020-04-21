@@ -1,28 +1,37 @@
 {% include "finalApp/header.html" %}
 
 <center>
-<div class="account-forms"> 
+<div class="account-forms">
+
+{% if form.non_field_errors or form.username.errors or form.email.errors or form.password.errors or form.password_confirm.errors %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{form.non_field_errors}}
+    {{ form.username.errors }}
+    {{ form.email.errors }}
+    {{ form.password_confirm.errors }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endif %}
+
 <h2>Create Account</h2>
 <form action="" method="post">
     {% csrf_token %}
     <p>
-      Username: <input type="text" name="username" value="{{form.data.username}}" class="form-control" />
-      {{ form.username.errors }}
+      Username: <input type="text" name="username" value="{{form.data.username}}" class="form-control" required/>
     </p>
     <p>
-      Email: <input type="text" name="email" value="{{form.data.email}}" class="form-control" />
-      {{ form.email.errors }}
+      Email: <input type="text" name="email" value="{{form.data.email}}" class="form-control" required/>
     </p>
     <p>
-      Create Password: <input type="password" name="password" class="form-control" />
-      {{ form.password.errors }}
+      Create Password: <input type="password" name="password" class="form-control" required/>
     </p>
     <p>
-      Confirm Password: <input type="password" name="password_confirm" class="form-control" />
-      {{ form.password_confirm.errors }}
+      Confirm Password: <input type="password" name="password_confirm" class="form-control" required/>
     </p>
     <p>
-      <input type="submit" value="Create" />
+      <button type="submit" class="btn btn-success">Create</button>
     </p>
 </form>
 </div>
