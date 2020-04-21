@@ -81,8 +81,8 @@
         <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
-        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')">Add to Cart</button>
-        <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn btn-secondary">
+        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">Add to Cart</button>
+        <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">
           Join Chatroom
         </button>
 

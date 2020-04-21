@@ -69,7 +69,8 @@
         checkoutButton.setAttribute("type", "submit");
         checkoutButton.setAttribute("value", "Checkout");
         checkoutButton.setAttribute("name", "Checkout");
-        
+        checkoutButton.setAttribute("class", "btn btn-primary");
+
         checkoutButton.setAttribute("id", "checkout"); 
         var checkoutText = document.createTextNode("Checkout");
         checkoutButton.appendChild(checkoutText);
@@ -139,7 +140,7 @@
             fillerText.parentNode.removeChild(fillerText);
             
 
-            var cartDiv = document.getElementById("cartDiv");
+            var cartDiv = document.getElementById("cartPrice");
             //create total price row
             var pricePara = document.createElement("P");
             pricePara.setAttribute("id", "pricePara");
@@ -150,7 +151,7 @@
     }
 
     function updatePrice(){
-        var cartDiv = document.getElementById("cartDiv");
+        var cartPrice = document.getElementById("cartPrice");
         var priceParaRm= document.getElementById("pricePara");
         priceParaRm.parentNode.removeChild(priceParaRm);
 
@@ -158,7 +159,7 @@
         pricePara.setAttribute("id", "pricePara");
         priceText = document.createTextNode("Total: $" + totalPrice.toFixed(2));
         pricePara.appendChild(priceText);
-        cartDiv.appendChild(pricePara);
+        cartPrice.appendChild(pricePara);
             
         //update ID string
         // var input = document.getElementById("checkInput");
@@ -195,12 +196,14 @@
         titleCell.appendChild(titleBold);
         titleCell.appendChild(newLine);
         titleCell.appendChild(priceSmall);
+        titleCell.setAttribute("class", "titleCell");
         row.appendChild(titleCell);
 
        
         //create remove button for item
         var removeButtonCell = document.createElement("TD");
         var removeButton = document.createElement("BUTTON");
+        removeButton.setAttribute("class", "btn icon-btn");
         removeButton.setAttribute("type", "submit");
         removeButton.setAttribute("onclick", "removeItem(" + item.id + ")");
         var removeText = document.createTextNode("-");
@@ -221,6 +224,7 @@
         var addButtonCell = document.createElement("TD");
         var addButton = document.createElement("BUTTON");
         addButton.setAttribute("type", "submit");
+        addButton.setAttribute("class", "btn icon-btn");
         addButton.setAttribute("onclick", "addItem(" + item.id + ", \"" + item.title + "\"," + item.price + ",\"" + item.img + "\")");
         var addText = document.createTextNode("+");
         addButton.appendChild(addText);

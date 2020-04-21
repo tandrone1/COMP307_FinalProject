@@ -61,12 +61,18 @@
                         <table id = "cartTable" class="dropdown-item">
                             <p id="cartFiller" align="center" vertical-align = "middle">Empty cart</p>
                         </table>
+                        <div id="cartSummary" class="cartSummary">
+                             <div id="cartPrice">
+                                
+                            </div>
+                            <form method='post' action='#' id="checkoutForm">
+                                    {% csrf_token %}     
+
+
+                            </form> 
+                           
+                        </div>
                         
-                        <form method='post' action='#' id="checkoutForm">
-                        {% csrf_token %}     
-
-
-                        </form>
                     </div>
                     
                 </li>
