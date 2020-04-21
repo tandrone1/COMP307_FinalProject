@@ -42,7 +42,7 @@
         cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
 
         totalItems = JSON.parse(window.localStorage.getItem('totalItems'));
-        console.log(totalItems);
+        
 
         totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
 
@@ -135,19 +135,19 @@
     }
 
     function setUpCartUI(){
-            //remove text that says "Empty Cart"
-            var fillerText = document.getElementById("cartFiller");
-            fillerText.parentNode.removeChild(fillerText);
+        //remove text that says "Empty Cart"
+        var fillerText = document.getElementById("cartFiller");
+        fillerText.parentNode.removeChild(fillerText);
             
 
-            var cartDiv = document.getElementById("cartPrice");
-            //create total price row
-            var pricePara = document.createElement("P");
-            pricePara.setAttribute("id", "pricePara");
-            var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
-            pricePara.appendChild(priceText);
-            cartDiv.appendChild(pricePara);
-            createCheckoutButton();
+        var cartDiv = document.getElementById("cartPrice");
+        //create total price row
+        var pricePara = document.createElement("P");
+        pricePara.setAttribute("id", "pricePara");
+        var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
+        pricePara.appendChild(priceText);
+        cartDiv.appendChild(pricePara);
+        createCheckoutButton();
     }
 
     function updatePrice(){
@@ -171,12 +171,12 @@
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
         row.setAttribute("id", item.id);
-        // autoIndex++;
+        
         //image in cart
         var imgCell = document.createElement("TD");
         var img = document.createElement("IMG");
         img.setAttribute("src", "static/images/" +item.img);
-        img.setAttribute("height", "80")
+        img.setAttribute("width", "80")
         imgCell.appendChild(img);
         row.appendChild(imgCell);
 

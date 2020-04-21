@@ -78,10 +78,20 @@
         <h5 class="card-title">{{l.title}}</h5> 
         <p class="card-text">{{l.text}}</p>
         <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
+        {% if l.inventory > 0 %}
         <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
+        {% else %}
+        <p class="card-inventory"><small class="text-text">SOLD OUT</small></p>
+        {% endif %}
         <p class="card-text"><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
         <p class="card-author">By {{l.author}}</p>
-        <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">Add to Cart</button>
+        {% if l.inventory > 0 %}
+          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">Add to Cart</button>
+        {% else %}
+          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary" disabled="true">Add to Cart</button>
+        {% endif %}
+        <br>
+       
         <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">
           Join Chatroom
         </button>
@@ -97,4 +107,9 @@
 </div>
 </center>
 
-
+<!-- <script type="text/javascript">
+  document.getElementById("addToCart").addEventListener("load", checkAvailability(this));
+  function checkAvailability(button){
+    console.log("checking");
+  }
+</script> -->
