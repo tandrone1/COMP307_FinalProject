@@ -7,46 +7,40 @@
             Go to my Bidding Room
     </button>
 </div>
-
 <hr />
 <div>
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
         Show all Bidding Rooms
     </button>
-
+    <!-- Collapsable button to reveal all Bidding Rooms -->
     <div class="collapse" id="collapseExample">
-
-    {% for u in users %}
-        <div class="card card-body bidding-card">
-
-            <b>{{u.username}}'s</b> Bidding Room
-            <a href="/chat/{{u.username}}" class="stretched-link"></a>
-
-        </div>
-    {% endfor %}
+        {% for u in users %}
+            <div class="card card-body bidding-card">
+                <b>{{u.username}}'s</b> Bidding Room
+                <a href="/chat/{{u.username}}" class="stretched-link"></a>
+            </div>
+        {% endfor %}
     </div>
-    <hr />
-
-    <div>
-        Have a custom Bidding Room? Enter the name here.<br/>
-        <input id="room-name-input" style="width: 50%" type="text" size="50" class="form-control">
-        <button id="room-name-submit" type="button" style="margin-top:1rem" class="btn btn-secondary">Go</button>
-    </div>
-
+</div>
+<hr />
+<div>
+    Have a custom Bidding Room? Enter the name here.<br/>
+    <input id="room-name-input" style="width: 50%" type="text" size="50" class="form-control">
+    <button id="room-name-submit" type="button" style="margin-top:1rem" class="btn btn-secondary">Go</button>
 </div>
 
-    <script>
-        document.getElementById('room-name-input').focus();
-        document.getElementById('room-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.getElementById('room-name-submit').click();
-            }
-        };
+<!-- Takes the chat room entered and redirects to it (from lecture)-->
+<script>
+    document.getElementById('room-name-input').focus();
+    document.getElementById('room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.getElementById('room-name-submit').click();
+        }
+    };
 
-        document.getElementById('room-name-submit').onclick = function(e) {
-            var roomName = document.getElementById('room-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/';
-        };
-    </script>
-
+    document.getElementById('room-name-submit').onclick = function(e) {
+        var roomName = document.getElementById('room-name-input').value;
+        window.location.pathname = '/chat/' + roomName + '/';
+    };
+</script>
 </center>

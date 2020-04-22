@@ -2,35 +2,33 @@
 {% include "finalApp/header.html" %}
 
 <center>
+  <div class="listing-section">
+  <h4 align="left" style="padding-left: 16rem;">Order History</h4>
 
-<div class="listing-section">
-<h4 align="left" style="padding-left: 16rem;">Order History</h4>
-
-
-{% for p,c in carts.items %}
-  <p align="left" style="padding-left: 16rem; padding-top: 1rem; padding-bottom: 0rem;" class="text-muted">{{p}}</p>
-  {% for l in c %}
-    <table  style="background: white; opacity: 0.90; border-top: 1px solid #e9e9e9; border-bottom: 1px solid #e9e9e9; padding-bottom: 20rem" width="60%" >
-        <tr>
-          <td width="15%" style="padding: 1rem">
-            <!-- img -->
-            <img src="{% static 'images/'|add:l.file_path %}" style="max-height:100%; max-width:100%" alt="..." >
-          </td>
-          <td width="35%" style="padding: 1.5rem">
-            <!-- name and price -->
-            <h5>{{l.title}}</h5>
-            <p class="card-price">${{l.price}}</p>
-            <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
-            
-          </td>
-          <td width="50%" style="padding: 1rem">
-            <!-- text -->
-            <p class="card-text">{{l.text}}</p>
-          </td>
-        </tr>
-    </table>
+  {% comment %} Loops through all purchased listings {% endcomment %}
+  {% for p,c in carts.items %}
+    <p align="left" style="padding-left: 16rem; padding-top: 1rem; padding-bottom: 0rem;" class="text-muted">{{p}}</p>
+    {% for l in c %}
+      <table  style="background: white; opacity: 0.90; border-top: 1px solid #e9e9e9; border-bottom: 1px solid #e9e9e9; padding-bottom: 20rem" width="60%" >
+          <tr>
+            <td width="15%" style="padding: 1rem">
+              <!-- img -->
+              <img src="{% static 'images/'|add:l.file_path %}" style="max-height:100%; max-width:100%" alt="..." >
+            </td>
+            <td width="35%" style="padding: 1.5rem">
+              <!-- name and price -->
+              <h5>{{l.title}}</h5>
+              <p class="card-price">${{l.price}}</p>
+              <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
+              
+            </td>
+            <td width="50%" style="padding: 1rem">
+              <!-- text -->
+              <p class="card-text">{{l.text}}</p>
+            </td>
+          </tr>
+      </table>
+    {% endfor %}
   {% endfor %}
-{% endfor %}
-</div>
-
+  </div>
 </center>

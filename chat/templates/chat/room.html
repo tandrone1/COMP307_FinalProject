@@ -2,35 +2,32 @@
 {% include "finalApp/header.html" %}
 
 <center>
-
-{% if not room_user %}
-    <h3>Custom Bidding Room - {{room_name}}</h3>
-{% else %}
-    <h3>{{room_name}}'s Bidding Room</h3>
-    <img src="{% static 'images/'|add:room_user.picture %}" style="margin-bottom: 1rem;" class="img-responsive center-img profile-image" alt="..." >
-
-{% endif %}
-<div>
-
-    <div class="card mb-3 custom-card scrollable-container"></div>
-    <input id="chat-message-input"  style="width: 50%" type="text" size="50" class="form-control">
-    <button id="chat-message-submit" style="margin-top:1rem" type="button" class="btn btn-success" value="Send">Send</button>
+    <!-- Name of the bidding room (either Custom or Username) -->
+    {% if not room_user %}
+        <h3>Custom Bidding Room - {{room_name}}</h3>
+    {% else %}
+        <h3>{{room_name}}'s Bidding Room</h3>
+        <img src="{% static 'images/'|add:room_user.picture %}" style="margin-bottom: 1rem;" class="img-responsive center-img profile-image" alt="..." >
+    {% endif %}
 
     <div>
-        
+        <div class="card mb-3 custom-card scrollable-container"></div>
+        <input id="chat-message-input"  style="width: 50%" type="text" size="50" class="form-control">
+        <button id="chat-message-submit" style="margin-top:1rem" type="button" class="btn btn-success" value="Send">Send</button>
     </div>
-
-</div>
 </center>
 
 <script>
+    // Stores data from Context
     var roomName = "{{ room_name }}";
     var account = "{{ user }}";
 
+    // Opens Websocket
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/chat/' + roomName + '/');
 
+    // Receiving a message triggers variables to be stored from Websocket data 
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
@@ -38,43 +35,42 @@
         var type = data['type'];
         var user_picture = data['user_picture'];
 
+        // Meta messages will be displayed in muted text in the middle ('user has entered...etc')
         if(type == 'meta'){
             $( ".scrollable-container" ).append( '<p class="muted">' + user + ' ' + message + '</p>' );
         }
+        // Messages you receive have the username and picture of user who sent it 
         else{
-        
             if(account == user){
                 $( ".scrollable-container" ).append( '<p class="user-message">' + 'You: ' + message + '</p>' );
             }
             else{
                 $( ".scrollable-container" ).append( '<p class="other-message"><img src="/static/images/' + user_picture + '" class="img-responsive center-img profile-image chat-image" alt="..." >' + user + ': ' + message + '</p>' );
             }
-            
         }
-
+        // Keeps the scrolling at the bottom 
         var d = $('.scrollable-container');
         d.scrollTop(d.prop("scrollHeight"));
-
     };
 
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
 
+    // Entering a message to be sent 
     document.getElementById('chat-message-input').focus();
     document.getElementById('chat-message-input').onkeyup = function(e) {
         if (e.keyCode === 13) {  // enter, return
             document.getElementById('chat-message-submit').click();
         }
     };
-
+    // Sending the message 
     document.getElementById('chat-message-submit').onclick = function(e) {
         var messageInputDom = document.getElementById('chat-message-input');
         var message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
             'message': message
         }));
-
         messageInputDom.value = '';
     };
 </script>

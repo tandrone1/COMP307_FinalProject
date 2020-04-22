@@ -48,6 +48,6 @@ class TestCase1(TestCase):
 		# Tests if the validation response for signup is correct (email + password errors)
 		response = self.client.post("/account/signup", {'username': 'randomuser', 'email': 'test.com', 'password': 'randompass', 'password_confirm': 'randompas'})
 		self.assertFormError(response, 'form', 'email', 'Enter a valid email address.')
-		self.assertFormError(response, 'form', 'password_confirm', 'Passwords do not match')
+		self.assertFormError(response, 'form', 'password_confirm', 'Passwords do not match.')
   
 		print('Form Validation verified')

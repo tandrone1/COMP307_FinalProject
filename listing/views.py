@@ -24,52 +24,48 @@ from django.contrib import messages
 import requests
 
 
-
-# Create your views here.2
-#This view gives the list view of the listings
+# List view of the listings
 @login_required
 def listing_list(request):
     
-
-    context = {'my_listings': Listing.objects.filter(author=request.user)}
+    context = {}
+    context['my_listings'] = Listing.objects.filter(author=request.user)
     context['listings'] = Listing.objects.exclude(author=request.user)
     template = 'listing/listing_list.html'
 
-    #checks if the checkout button was pushed
+    # Checks if the checkout button was pushed
     if request.method == "POST":
-        form3 = checkoutForm(request.POST)
+        form = checkoutForm(request.POST)
 
-        #if the button was pressed then move to gathering data    
-        if request.POST.get('checkInput') is not None and form3.is_valid():
+        # If the button was pressed then move to gathering data    
+        if request.POST.get('checkInput') is not None and form.is_valid():
             print("CHECKOUT" + request.POST.get('checkInput'));
             bads = []
             goods = []
             cart = request.POST.get('checkInput').split(",")
             for i in cart:
-
                 temp = Listing.objects.get(id=i)
-                #creating lists of items that were purchased, and failed to be purchased
+                # Creating lists of items that were purchased, and failed to be purchased
                 if temp.inventory > 0:
                     goods.append(i)
                 else:
                     bads.append(i)
-
- 
-                
             request.session['bads']=bads
             request.session['goods']=goods
             return redirect('/transaction/checkout')
-
+        
     return render(request, template, context)
 
 
-#This view is for the form to create new listings 
+# View for the form to create new listings 
 @login_required
 def create_listing(request):
-
+    
+    # If form was submitted 
     if request.method == "POST":
         form = ListingForm(request.POST)
         if form.is_valid():
+            # Stores the image inside default_storage (MEDIA_ROOT)
             file = request.FILES['image']
             default_storage.save(file.name, file)
             listing = form.save(commit=False)
@@ -84,45 +80,40 @@ def create_listing(request):
     return render(request, 'listing/create_listing.html', {'form': form})
 
 
+# View for editing a listing 
 @login_required
 def edit_listing(request, listing_id=None):
 
+    # Form submitted to edit/delete 
     if request.method == "POST":
         context = {}
         form = ListingForm(request.POST)
         context['form'] = form
 
         if form.is_valid():
-
             article = Listing.objects.get(id=listing_id)
 
-            # Checks if the author of the listing being edited matches the user making the edit 
+            # Checks if the author of the listing being edited matches the user making the edit (security)
             if 'edit' in request.POST and request.user == article.author:
-
                 listing = ListingForm(request.POST, instance=article)           
                 listing.save(commit=False)
                 listing.save()
-
+            # If the delete option was selected, then check (same as above) and delete 
             elif 'delete' in request.POST and request.user == article.author:
-
                 article = Listing.objects.get(id=listing_id)
                 article.delete()
-
             return redirect('/')
-
+    
+    # Form not submitted - gets the matching listing based on listing_id, gets the form and puts into context
     else:
-        # Gets the matching listing based on listing_id, gets the form and puts into context
         listings = Listing.objects.filter(id=listing_id)
         if not listings:
-            return HttpResponseNotFound('<h3>Page not found.</h3>')
+            return HttpResponseNotFound('<h4>Page not found.</h4>')
         listing = listings[0]
-
         context = {'listing': listing}
         context['user'] = request.user
        
     return render(request, 'listing/edit_listing.html', context)
-
-
 
 
 ############################

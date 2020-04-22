@@ -29,7 +29,6 @@ def send_simple_message(email, item):
 
 
 
-
 #REAL METHODS#
 class Listing(models.Model):
     #Change author to correspond to account eventually
