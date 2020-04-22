@@ -128,8 +128,6 @@
            
         }
 
-       
-      
         //store the updated cart
         storeCart()
     
