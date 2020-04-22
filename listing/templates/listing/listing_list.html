@@ -19,7 +19,8 @@
 <h2>Listings</h2>
 <div>
 
-<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">New Listing</button>
+<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">
+<img style="padding-right: 0.5rem; padding-bottom: 0.2rem" src="{% static 'images/add.svg' %}" height="22rem">New Listing</button>
 
 <div class="listing-content">
 
@@ -47,7 +48,7 @@
             <td>
               <h4 class="card-title">{{l.title}}</h4> 
             </td>
-            <td>
+            <td width="25%">
               <p align="right">  
                 <button align = "right" onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="edit-button" >
                   <img src="{% static 'images/edit.svg' %}" height="15rem">
