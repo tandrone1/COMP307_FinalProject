@@ -7,57 +7,48 @@
     <h4 align="left">Create Listing</h4>
   </div>
 
-<div style="width:40%; margin-top: 2rem"> 
+  <div style="width:40%; margin-top: 2rem"> 
+    <!-- Form for creating a listing, simple validation is handled client-side -->
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <div class="form-group">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" name="image" id="image" accept="image/*" required>
+            <label class="custom-file-label" for="image" align = "left">Choose image...</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <h6 for="title" align="left">Title</h6>
+          <input type="text" class="form-control"id="title" name="title" required>
+        </div>
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col-md-6">
+              <h6 for="price" align="left">Price</h6>
+              <input type="number" class="form-control" id="price" name="price" required>
+          </div>
+          <div class="col-md-6">
+            <h6 for="inventory" align="left">Inventory</h6>
+            <input type="number" class="form-control" id="inventory" name="inventory" required>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 1rem">
+          <h6 for="text" align="left">Description</h6>
+          <textarea class="form-control" id="text" name="text" rows="5"></textarea>
+        </div>
+        <div style="padding-top: 1rem">
+          <button type="submit" name="edit" class="btn btn-primary"><img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/upload.svg' %}" height="24rem">Upload Listing</button>
+        </div>
+    </form>
 
-  <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group">
-      <div class="custom-file">
-        <input type="file" class="custom-file-input" name="image" id="image" accept="image/*" required>
-        <label class="custom-file-label" for="image" align = "left">Choose image...</label>
-        {{form.image.errors}}
-      </div>
-    </div>
-    <div class="form-group">
-      <h6 for="title" align="left">Title</h6>
-      
-      <input type="text" class="form-control"id="title" name="title" required>
-      {{form.title.errors}}
-    </div>
-    <div class="form-group">
-      <div class="form-row">
-        <div class="col-md-6">
-          <h6 for="price" align="left">Price</h6>
-          <input type="number" class="form-control" id="price" name="price" required>
-          {{form.price.errors}} 
-      </div>
-      <div class="col-md-6">
-        <h6 for="inventory" align="left">Inventory</h6>
-        <input type="number" class="form-control" id="inventory" name="inventory" required>
-        {{form.inventory.errors}}
-      </div>
-    </div>
   </div>
-    <div class="form-group">
-    <h6 for="text" align="left">Description</h6>
-    <textarea class="form-control" id="text" name="text" rows="5"></textarea>
-    {{form.text.errors}}
-  </div>
-  <div style="padding-top: 1rem">
-    
-    <button type="submit" name="edit" class="btn btn-primary"><img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/upload.svg' %}" height="24rem">Upload Listing</button>
-  </div>
-    
-  </form>
-</div>
 </center>
 
-
+<!-- JS Script to load filename when picture is browsed -->
 <script>
   $('#image').on('change',function(){
-  //get the file name
-  var fileName = $(this).val();
-  //replace the "Choose a file" label
-  $(this).next('.custom-file-label').html(fileName);
-            })
+    // Getting the filename and replacing the label 
+    var fileName = $(this).val();
+    $(this).next('.custom-file-label').html(fileName);
+  })
 </script>

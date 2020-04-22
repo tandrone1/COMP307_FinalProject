@@ -5,7 +5,10 @@ from channels.auth import get_user, logout
 from django.contrib.auth.models import User
 from account.models import Account
 
+
+# Modified ChatConsumer class from lectures 
 class ChatConsumer(WebsocketConsumer):
+    # Connecting to the websocket 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
@@ -14,7 +17,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-        
+        # Join user group 
         user = self.scope['user']
         if user.is_authenticated:
           async_to_sync(self.channel_layer.group_add)(
@@ -29,7 +32,7 @@ class ChatConsumer(WebsocketConsumer):
         else:
             message = 'Anonymous: ' + ' has entered the room.'
         
-        # Send message to room group
+        # Send message to room group, message_type is used to parse what's a message VS a notification ("user has entered the room")
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -40,6 +43,7 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
 
+    # Disconnecting from websocket 
     def disconnect(self, close_code):
         # Leave room group
         message = ' has left the room.'
@@ -69,7 +73,8 @@ class ChatConsumer(WebsocketConsumer):
             message = message
         else:
             message = 'Anonymous: ' + message
-            
+        
+        # Gets the Account's profile picture, sends via 'user_picture'
         try:
             account = Account.objects.get(username=user)
             user_picture = account.picture
@@ -98,7 +103,7 @@ class ChatConsumer(WebsocketConsumer):
         else:
             user_picture = event['user_picture']
             
-        # Send message to WebSocket
+        # Send these 4 data in the message to WebSocket
         self.send(text_data=json.dumps({
             'message': message,
             'type': message_type,

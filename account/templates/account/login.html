@@ -2,43 +2,43 @@
 {% include "finalApp/header.html" %}
 
 <center>
-
-<div>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
-    {% endfor %}
-</ul>
-{% endif %}
-</div>
-
-<div class="account-forms"> 
-  {% if form.non_field_errors or form.username.errors or form.password.errors %}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    {{form.non_field_errors}}
-    {{ form.username.errors }}
-    {{ form.password.errors }}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+  <!-- Displays any additional messages from other Views -->
+  <div>
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+          {% endfor %}
+      </ul>
+    {% endif %}
   </div>
-  {% endif %}
-<h2>Login</h2>
-<form action="" method="post">
-    {% csrf_token %}
-    <p>
-      Username: <input type="text" name="username" class="form-control" required/>
-    </p>
-      Password: <input type="password" name="password" class="form-control" required/>
-    </p>
-    <p>
-      <button type="submit" class="btn btn-success">Login</button>
-    </p>
-</form>
-</div>
 
-<a href="/account/signup">New? Create account here.</a>
+  <div class="account-forms"> 
+    <!-- Displays any form errors as alert -->
+    {% if form.non_field_errors or form.username.errors or form.password.errors %}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{form.non_field_errors}}
+        {{ form.username.errors }}
+        {{ form.password.errors }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endif %}
 
+    <h2>Login</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>
+          Username: <input type="text" name="username" class="form-control" required/>
+        </p>
+          Password: <input type="password" name="password" class="form-control" required/>
+        </p>
+        <p>
+          <button type="submit" class="btn btn-success">Login</button>
+        </p>
+    </form>
+  </div>
+  <a href="/account/signup">New? Create account here.</a>
 </center>
 

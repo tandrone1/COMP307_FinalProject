@@ -3,131 +3,114 @@
 
 
 <center>
+  <!-- Displays any additional messages sent from Views -->
+  <div>
+      {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+      {% endif %}
+  </div>
 
-<div>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  <h2>Listings</h2>
+  <div>
+    <button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">
+      <img style="padding-right: 0.5rem; padding-bottom: 0.2rem" src="{% static 'images/add.svg' %}" height="22rem">New Listing</button>
+    <div class="listing-content">
+
+      <!-- Section for MY LISTINGS -->
+      <div class="listing-section">
+        <h4 align="left">My Listings</h4>
+        <!-- Loops through your listings -->
+        {% for l in my_listings %}
+
+          <div class="card mb-3 custom-card">
+            <div class="row">
+              <div class="col-md-5 listing-img">
+                <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+              </div>
+              <div class="col-md-7">
+                <div class="card-body">
+                  <table width = "100%">
+                    <tr>
+                      <td>
+                        <h4 class="card-title">{{l.title}}</h4> 
+                      </td>
+                      <td>
+                        <p align="right">  
+                          <button align = "right" onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="edit-button" >
+                            <img src="{% static 'images/edit.svg' %}" height="15rem">
+                            Edit
+                          </button>
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                  <h5 class="card-price" align="left">${{l.price}}</h5>
+                  <p class="card-text" align="left">{{l.text}}</p>
+                  {% if l.inventory > 0 %}
+                    <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
+                      <br>
+                      <small class="text-muted">Last updated at {{l.edit_date}}</small>
+                      <br>
+                      <small class="text-text">By {{l.author}}</small>
+                    </p>
+                  {% else %}
+                    <p align = "right" ><small class="text-text" style="color:red">{{l.inventory}} remaining</small>
+                      <br>
+                      <small class="text-muted">Last updated at {{l.edit_date}}</small>
+                      <br>
+                      <small class="text-text">By {{l.author}}</small>
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
         {% endfor %}
-    </ul>
-    {% endif %}
-</div>
+      </div>
 
+      <!-- Section for ALL LISTINGS -->
+      <div class="listing-section">
+        <h4 align="left">All Listings</h4>
+        <!-- Loops thorugh all listings (except yours) -->
+        {% for l in listings %}
 
+          <div class="card mb-3 custom-card">
 
-<h2>Listings</h2>
-<div>
-
-<button class="btn btn-primary" onclick="location.href = '/listing/create';" type="submit">
-<img style="padding-right: 0.5rem; padding-bottom: 0.2rem" src="{% static 'images/add.svg' %}" height="22rem">New Listing</button>
-
-<div class="listing-content">
-
-{% comment %} Section for MY LISTINGS {% endcomment %}
-
-
-
-
-<div class="listing-section">
-<h4 align="left">My Listings</h4>
-
-{% for l in my_listings %}
-
-  <div class="card mb-3 custom-card">
-
-  <div class="row" >
-    <div class="col-md-5 listing-img">
-      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
-    </div>
-    <div class="col-md-7">
-      <div class="card-body">
-
-        <table width = "100%">
-          <tr>
-            <td>
-              <h4 class="card-title">{{l.title}}</h4> 
-            </td>
-            <td width="25%">
-              <p align="right">  
-                <button align = "right" onclick="location.href = '/listing/edit/{{l.id}}';" type="button" class="edit-button" >
-                  <img src="{% static 'images/edit.svg' %}" height="15rem">
-                   Edit
-                </button>
-              </p>
-            </td>
-          </tr>
-        </table>
-        <h5 class="card-price" align="left">${{l.price}}</h5>
-        <p class="card-text" align="left">{{l.text}}</p>
-        {% if l.inventory > 0 %}
-        <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
-          <br>
-          <small class="text-muted">Last updated at {{l.edit_date}}</small>
-          <br>
-          <small class="text-text">By {{l.author}}</small>
-        </p>
-        {% else %}
-        <p align = "right" ><small class="text-text" style="color:red">{{l.inventory}} remaining</small>
-          <br>
-          <small class="text-muted">Last updated at {{l.edit_date}}</small>
-          <br>
-          <small class="text-text">By {{l.author}}</small>
-        </p>
-        {% endif %}
-       
+            <div class="row" >
+              <div class="col-md-5 listing-img">
+                <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
+              </div>
+              <div class="col-md-7">
+                <div class="card-body">
+                  <h4 class="card-title" align="left">{{l.title}}</h4> 
+                  <h5 class="card-price" align="left">${{l.price}}</h5>
+                  <p class="card-text" align="left">{{l.text}}</p>
+                  <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
+                    <br>
+                    <small class="text-muted">Last updated at {{l.edit_date}}</small>
+                    <br>
+                    <small class="text-text">By {{l.author}}</small>
+                  </p>
+                  <!-- Buttons to add items to cart (calls addItem) -->
+                  {% if l.inventory > 0 %}
+                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
+                  {% else %}
+                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary" disabled="true">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Sold out</button>
+                  {% endif %}
+                  <br>
+                  <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">
+                    Join Bidding Room
+                  </button> 
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
       </div>
     </div>
   </div>
-</div>
-
-{% endfor %}
-</div>
-
-
-{% comment %} Section for ALL LISTINGS {% endcomment %}
-<div class="listing-section">
-<h4 align="left">All Listings</h4>
-{% for l in listings %}
-
-  <div class="card mb-3 custom-card">
-
-  <div class="row" >
-    <div class="col-md-5 listing-img">
-      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
-    </div>
-    <div class="col-md-7">
-      <div class="card-body">
-        <h4 class="card-title" align="left">{{l.title}}</h4> 
-        <h5 class="card-price" align="left">${{l.price}}</h5>
-        <p class="card-text" align="left">{{l.text}}</p>
-        
-        <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
-          <br>
-          <small class="text-muted">Last updated at {{l.edit_date}}</small>
-          <br>
-          <small class="text-text">By {{l.author}}</small>
-        </p>
-  
-        {% if l.inventory > 0 %}
-          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}', '{{l.inventory}}')" class = "btn btn-secondary addbtn{{l.id}}">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
-        {% else %}
-          <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}' , '{{l.inventory}}')" class = "btn btn-secondary" disabled="true">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Sold out</button>
-        {% endif %}
-        <br>
-        <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">
-          Join Bidding Room
-        </button> 
-
-      </div>
-    </div>
-  </div>
-</div>
-
-{% endfor %}
-</div>
-</div>
-</div>
 </center>
-
-
