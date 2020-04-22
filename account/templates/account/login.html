@@ -1,6 +1,8 @@
 {% load static %}
 {% include "finalApp/header.html" %}
 
+<center>
+
 <div>
 {% if messages %}
 <ul class="messages">
@@ -11,7 +13,6 @@
 {% endif %}
 </div>
 
-<center>
 <div class="account-forms"> 
   {% if form.non_field_errors or form.username.errors or form.password.errors %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
