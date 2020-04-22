@@ -3,6 +3,7 @@
     var totalItems = 0;
     var totalPrice = 0;
     var itemIDString = "";
+    var emptyCartUI;
 
     function insertCartMap(key, value){
         if(cartMap.has(key)){
@@ -51,7 +52,7 @@
         //load the UI
         var cart = document.getElementById("cartDiv");
         if(window.localStorage.getItem('cart')!=null){
-            console.log("not null");
+            
             cart.innerHTML = window.localStorage.getItem('cart');
             updateCart();
         }
@@ -72,7 +73,9 @@
         checkoutButton.setAttribute("class", "btn btn-primary");
 
         checkoutButton.setAttribute("id", "checkout"); 
-        var checkoutText = document.createTextNode("Checkout");
+        var checkoutText = document.createTextNode("View Cart");
+
+        
         checkoutButton.appendChild(checkoutText);
 
         
@@ -110,7 +113,14 @@
         //update the price
         totalPrice += item.price;
 
-
+         if(totalItems == 1){
+            
+            setUpCartUI();
+            
+        }else{
+            
+            updatePrice()
+        }
         //update UI
         if(quantity == 1){
             UIaddNewItem(item); 
@@ -120,14 +130,7 @@
            
         }
 
-        if(totalItems == 1){
-            
-            setUpCartUI();
-            
-        }else{
-            
-            updatePrice()
-        }
+       
       
         //store the updated cart
         storeCart()
@@ -135,9 +138,14 @@
     }
 
     function setUpCartUI(){
+        emptyCartUI = document.getElementById("cartDiv").innerHTML;
+        window.localStorage.setItem('emptyCart', emptyCartUI);
         //remove text that says "Empty Cart"
-        var fillerText = document.getElementById("cartFiller");
+        var fillerText = document.getElementById("cartText");
         fillerText.parentNode.removeChild(fillerText);
+
+        var fillerImg = document.getElementById("cartFiller");
+        fillerImg.parentNode.removeChild(fillerImg);
             
 
         var cartDiv = document.getElementById("cartPrice");
@@ -171,6 +179,7 @@
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
         row.setAttribute("id", item.id);
+        row.setAttribute("class", "cartRow");
         
         //image in cart
         var imgCell = document.createElement("TD");
@@ -282,25 +291,51 @@
     
     
     function loadEmptyCart(){
-        //remove checkout button
-        var checkoutButton = document.getElementById("checkout");
-        checkoutButton.parentNode.removeChild(checkoutButton);
-        //remove checkout input
-        var checkoutInput = document.getElementById("checkInput");
-        checkoutInput.parentNode.removeChild(checkoutInput);
 
-        //add filler text
-        var emptyCart = document.createElement("p");
-        emptyCart.setAttribute("id", "cartFiller");
-        var fillerText = document.createTextNode("Empty Cart");
-        emptyCart.appendChild(fillerText);
+        var cart = document.getElementById("cartDiv");
+        cart.innerHTML = window.localStorage.getItem('emptyCart');
+        // //remove checkout button
+        // var checkoutButton = document.getElementById("checkout");
+        // checkoutButton.parentNode.removeChild(checkoutButton);
+        // //remove checkout input
+        // var checkoutInput = document.getElementById("checkInput");
+        // checkoutInput.parentNode.removeChild(checkoutInput);
 
-        var cart = document.getElementById("cartTable");
-        cart.appendChild(emptyCart);
+        // //remove price text
+        // var priceParaRm= document.getElementById("pricePara");
+        // priceParaRm.parentNode.removeChild(priceParaRm);
 
-        //remove price text
-        var priceParaRm= document.getElementById("pricePara");
-        priceParaRm.parentNode.removeChild(priceParaRm);
+        // <p align="center" id="cartFiller">
+                            
+        //                     <img src="{% static 'images/empty-cart.svg' %}" width="100%" style="align-items: center; padding: 1.5rem; opacity: 0.9">
+        //                 </p>
+
+        //add image
+        // var imgP = document.createElement("P");
+        // imgP.setAttribute("id", "cartFiller");
+
+        // var cartImg = document.createElement("IMG");
+        // cartImg.setAttribute("src", "{% static 'images/empty-cart.svg' %}");
+        // cartImg.setAttribute("width", "100%");
+        // cartImg.setAttribute("style", "align-items: center; padding: 1.5rem; opacity: 0.9");
+
+        // imgP.appendChild(cartImg);
+
+        // var cartDiv = document.getElementById("cartDiv");
+        // cartDiv.replaceChild(imgP, cartDiv.childNodes[0]);
+
+
+        // // //add filler text
+        // var emptyCart = document.createElement("p");
+        // emptyCart.setAttribute("id", "cartFiller");
+        // var fillerText = document.createTextNode("Empty Cart");
+        // emptyCart.appendChild(fillerText);
+
+        // var cart = document.getElementById("cartDiv");
+        // cart.appendChild(emptyCart);
+
+
+        
     }
 
     function updateCart(){

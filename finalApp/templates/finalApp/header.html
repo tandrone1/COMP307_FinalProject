@@ -11,6 +11,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <link rel="shortcut icon" type="image/svg" href="{% static 'images/favicon.svg' %}"/>
 
+        <!-- fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
@@ -58,12 +59,18 @@
                 <li class="nav-item dropdown" id = "cartList">
                     <a class="nav-link dropdown-toggle" href="/" id="cart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "cart">Cart (0)</a> 
                     <div class="dropdown-menu" id = "cartDiv" aria-labelledby="navbarDropdownMenuLink">
-                        <table id = "cartTable" class="dropdown-item" width = 100>
-                            <p id="cartFiller" >Empty cart</p>
+                        <p align="center" id="cartFiller">
+                            
+                            <img src="{% static 'images/empty-cart.svg' %}" width="100%" style="align-items: center; padding: 1.5rem; opacity: 0.9">
+                        </p>
+                        
+                        <table id = "cartTable" class="dropdown-item" width = 100%>
+                            
                         </table>
-                        <div id="cartSummary" class="cartSummary">
+                        <div id="cartSummary" class="cartSummary dropdown-item" align="right">
                              <div id="cartPrice">
-                                
+                               <b style="color: #C4C4C4" id="cartText">Your cart is empty</b>
+
                             </div>
                             <form method='post' action='#' id="checkoutForm">
                                     {% csrf_token %}     

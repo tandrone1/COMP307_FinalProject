@@ -29,7 +29,7 @@
 
 
 <div class="listing-section">
-<h4>My Listings</h4>
+<h4 align="left">My Listings</h4>
 
 {% for l in my_listings %}
 
@@ -60,15 +60,20 @@
         <h5 class="card-price" align="left">${{l.price}}</h5>
         <p class="card-text" align="left">{{l.text}}</p>
         {% if l.inventory > 0 %}
-        <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small></p>
+        <p align = "right" ><small class="text-text">{{l.inventory}} remaining</small>
+          <br>
+          <small class="text-muted">Last updated at {{l.edit_date}}</small>
+          <br>
+          <small class="text-text">By {{l.author}}</small>
+        </p>
         {% else %}
-        <p align = "right" ><small class="text-text" style="color:red">{{l.inventory}} remaining</small></p>
+        <p align = "right" ><small class="text-text" style="color:red">{{l.inventory}} remaining</small>
+          <br>
+          <small class="text-muted">Last updated at {{l.edit_date}}</small>
+          <br>
+          <small class="text-text">By {{l.author}}</small>
+        </p>
         {% endif %}
-        <p align = "right" ><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
-        <p class="card-author" align = "right"><small class="text-text">By {{l.author}}</small></p>
-        <!-- Button trigger modal -->
-        <!-- Probably dont want people buying their own stuff right? -->
-        <!-- <button type="button"onclick="addItem({{l.id}},'{{l.title}}', '{{l.text}}', {{l.price}}, '{{l.author}}', '{{l.file_path}}')">Add to Cart</button> -->
        
       </div>
     </div>
@@ -81,7 +86,7 @@
 
 {% comment %} Section for ALL LISTINGS {% endcomment %}
 <div class="listing-section">
-<h4>All Listings</h4>
+<h4 align="left">All Listings</h4>
 {% for l in listings %}
 
   <div class="card mb-3 custom-card">
@@ -103,8 +108,6 @@
           <small class="text-text">By {{l.author}}</small>
         </p>
   
-        <!-- <p align = "right" ><small class="text-muted">Last updated at {{l.edit_date}}</small></p>
-        <p class="card-author" align = "right"><small class="text-text">By {{l.author}}</small></p> -->
         {% if l.inventory > 0 %}
           <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
         {% else %}

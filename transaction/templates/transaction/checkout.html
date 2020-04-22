@@ -1,15 +1,17 @@
 {% load static %}
 {% include "finalApp/header.html" %}
-<center>
-	<div>
-		{% if messages %}
-		<ul class="messages">
-		    {% for message in messages %}
-		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-		    {% endfor %}
-		</ul>
-		{% endif %}
-	</div>
+<html>
+<body onload="setQuantity()" id="body">
+  <center>
+  <div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
 {% comment %} Section for MY LISTINGS {% endcomment %}
 <div class="listing-section">
 
@@ -44,63 +46,166 @@
 {% if OOS_Listings%}
 <h4>Still in Cart</h4>
 {%endif%}
-<table>
+<h4 align="left" style="padding-left: 8rem">Order Summary</h4>
+<table style="background: white; opacity: 0.90;" width="70%" >
 {% for l in IS_Listings %}
 
   <tr>
-    <td>
+    <td width="20%" style="padding: 1rem">
       <!-- img -->
-      <img src="{% static 'images/'|add:l.file_path %}" class="checkout-img" alt="..." >
+      <img src="{% static 'images/'|add:l.file_path %}" style="max-height:100%; max-width:100%" alt="..." >
     </td>
-    <td class="titleCell">
+    <td width="15%" style="padding: 1.5rem">
       <!-- name and price -->
       <h5>{{l.title}}</h5>
       <p class="card-price">${{l.price}}</p>
+      <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
       
     </td>
-    <td>
+    <td width="50%" style="padding: 1rem">
       <!-- text -->
       <p class="card-text">{{l.text}}</p>
-      
-      <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
-
+    </td>
+    <td width="15%">
+      <p align="center" style="color: grey"> Qty: 2</p>
     </td>
   </tr>
 
-
-
-<!-- <div class="card mb-3 custom-card">
-
-  <div class="row" >
-    <div class="col-md-5 listing-img">
-      <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
-    </div>
-    <div class="col-md-7">
-      <div class="card-body">
-        <h5 class="card-title">{{l.title}}</h5> 
-        <p class="card-text">{{l.text}}</p>
-        <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
-        <p class="card-inventory"><small class="text-text">{{l.inventory}} left</small></p>
-        <p class="card-author">By {{l.author}}</p>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 {% endfor %} 
 </table>
+<div align="right" style="padding-right: 10rem; padding-top: 4rem; padding-bottom: 4rem">
+  <h6>Total Price: $100.00</h6>
+  
 </div>
+</div>
+<div>
+  <h3 align="left" style="padding-left: 8rem">Billing Information</h3>
+  <table class = "payment" width="40%">
+    <tr>
+      <td >
+         <h6 align="left">First Name</h6>
+          <input type="text" name="FirstName">
+      </td>
+      <td >
+         <h6 align="left">Last Name</h6>
+          <input type="text" name="LastName">
+      </td>
+    </tr>
+  </table>
+  <table class = "payment" width="40%">
+    <tr>
+      <td>
+         <h6 align="left">Credit Card Number</h6>
+          <input type="text" name="CCnum">
+      </td>
+    </tr>
+    </table>
+    <table class = "payment" width="40%">
+    <tr>
+      <td style="padding-bottom: 1rem">
+        <h6 align="left">Month</h6>
+        
+          <select class="custom-select">
+            <option value="01">01</option>
+            <option value="02">02</option>
+            <option value="03">03</option>
+            <option value="04">04</option>
+            <option value="05">05</option>
+            <option value="06">06</option>
+            <option value="07">07</option>
+            <option value="08">08</option>
+            <option value="09">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        
+      </td>
+      <td style="padding-bottom: 1rem">
+        <h6 align="left">Year</h6>
+        
+          
+          <select class="custom-select">
+            <option value="20">2020</option>
+            <option value="21">2021</option>
+            <option value="22">2022</option>
+            <option value="23">2023</option>
+            <option value="24">2024</option>
+            
+          </select>
+   
+        
+        
+      </td>
+    </tr>
+  </table>
+  <table class = "payment" width="40%">
+    <tr>
+      <td >
+         <h6 align="left">Province/State</h6>
+          <input type="text" name="Province">
+      </td>
+      <td >
+         <h6 align="left">Zip/Postal Code</h6>
+          <input type="text" name="Postal Code">
+      </td>
+    </tr>
+  </table>
+    <table class = "payment" width="40%">
+    <tr>
+    <tr>
+      <td>
+         <h6 align="left">Street Address</h6>
+          <input type="text" name="AddrLine1">
+      </td>
+    </tr>
+    </table>
+    <table class = "payment" width="40%">
+    <tr>
+      <td style="padding-bottom: 2rem">
+        <h6 align="left">Country</h6>
+        
+          
+          <select class="custom-select">
+            <option value="Canada">Canada</option>
+          <option value="United States of America">United States of America</option>
+          </select>
+   
+        
+        
+      </td>
+    </tr>
+  </table>
+</div>
+
 <form method='post' action='#'>
   {%csrf_token%}
   <!-- <button type="submit" value="buy" name="buy" id="buy">Buy</button> -->
-  <input type="submit" value="Buy" name="buy" id="buy" class="btn btn-primary"/>
+  <input type="submit" value="Checkout" name="buy" id="buy" class="btn btn-primary"/>
 </form>
 
+
+
+
+</body>
 <script type="text/javascript">
+  // var cartMap = new Map();
+  document.getElementById("body").addEventListener("load", setQuantity);
+  function setQuantity(){
+    alert("alert!");
+    // console.log("yes");
+    // cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
+  }
   document.getElementById("buy").addEventListener("click", buy);
   function buy(){
     
     window.localStorage.clear();
   }
 
+  
+
 </script>
+
+
+</html>
+
