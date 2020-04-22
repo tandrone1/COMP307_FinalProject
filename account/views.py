@@ -71,7 +71,6 @@ def signup_action(request):
 
 
 def login_action(request):
-
     context = {}
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -85,7 +84,7 @@ def login_action(request):
                     return HttpResponseRedirect(request.GET['next'])
                 return HttpResponseRedirect(reverse('listing_list'))
             else:
-                form.add_error(None, 'Unable to log in')
+                form.add_error(None, 'Incorrect username and password combination')
         context['form'] = form
     return render(request, 'account/login.html', context)
 

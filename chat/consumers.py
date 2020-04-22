@@ -74,7 +74,7 @@ class ChatConsumer(WebsocketConsumer):
             account = Account.objects.get(username=user)
             user_picture = account.picture
         except Account.DoesNotExist:
-            user_picture = ''
+            user_picture = 'default-profile-picture.jpg'
         
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -94,7 +94,7 @@ class ChatConsumer(WebsocketConsumer):
         message_type = event['message_type']
         user = event['user']
         if message_type == 'meta':
-            user_picture = ''
+            user_picture = 'default-profile-picture.jpg'
         else:
             user_picture = event['user_picture']
             

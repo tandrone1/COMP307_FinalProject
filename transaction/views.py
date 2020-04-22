@@ -21,9 +21,16 @@ from django.shortcuts import redirect
 from django.core import serializers
 from django.contrib import messages
 
+
+
+#PROBLEM: IS_LISTING DOES NOT RETURN DUPLICATES LIKE IT SHOULD, PROBLEM IS WITH QUERYSETS WHICH BY DEFAULT CANT BE CHANGED AND DONT HAVE DUPLCIATES
 @login_required
 def checkout_action(request):
 	template = 'transaction/checkout.html'
+	IS_Listings = {}
+	# for i in request.session.get('goods'):
+	# 	IS_Listings.update(Listing.objects.filter(id=i).values())
+	# print(IS_Listings)
 	context = {
 		'OOS_Listings':Listing.objects.filter(id__in = request.session.get('bads')),
 		'IS_Listings':Listing.objects.filter(id__in = request.session.get('goods'))}
@@ -32,7 +39,8 @@ def checkout_action(request):
 		if request.POST.get('buy') is not None and form.is_valid():
 			t = Transaction(customer=request.user)
 			t.save()
-			for i in Listing.objects.filter(id__in = request.session.get('goods')):
+			for j in request.session.get('goods'):
+				i = Listing.objects.get(id=j)
 				i.inventory = i.inventory-1
 				i.save()
 				messages.add_message(request, messages.INFO, str(i.title) + " was purchased.")
