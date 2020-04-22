@@ -97,9 +97,9 @@
                   </p>
                   <!-- Buttons to add items to cart (calls addItem) -->
                   {% if l.inventory > 0 %}
-                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
+                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}', '{{l.inventory}}')" class = "btn btn-secondary addbtn{{l.id}}">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Add to Cart</button>
                   {% else %}
-                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}')" class = "btn btn-secondary" disabled="true">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Sold out</button>
+                    <button type="button"onclick="addItem({{l.id}},'{{l.title}}', {{l.price}}, '{{l.file_path}}', '{{l.inventory}}')" class = "btn btn-secondary" disabled="true">  <img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/cart.svg' %}" height="22rem">Sold out</button>
                   {% endif %}
                   <br>
                   <button onclick="location.href = '/chat/{{l.author}}';" type="button" class="btn-tertiary">

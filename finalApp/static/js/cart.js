@@ -124,8 +124,9 @@ function addItem(id, title, price, img, inventory){
     }
 
     if(cartMap.has(id)){
-
+        console.log(itemInventories.get(id));
         if(itemInventories.get(id) == cartMap.get(id).length){
+
             disableAddButton(true, id);
         }
 
@@ -331,20 +332,21 @@ function removeItem(id){
 
     }else{
         updatePrice();
+        itemIDstoString();
            
     }
-    itemIDstoString();
+    
     //store the cart when an item is removed
     storeCart();
 
 }
 
 function disableAddButton(disable, id){
-
+    
     var addButtons = document.getElementsByClassName("addbtn" + id);
-        for(var i =0; i< addButtons.length; i++){
-            addButtons[i].disabled = disable;
-        }
+    for(var i =0; i< addButtons.length; i++){
+        addButtons[i].disabled = disable;
+    }
 }
     
 function loadEmptyCart(){
