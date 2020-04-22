@@ -4,6 +4,7 @@
     var totalPrice = 0;
     var itemIDString = "";
     var emptyCartUI;
+    var itemInventories = new Map(); //<id, quantity>
 
     function insertCartMap(key, value){
         if(cartMap.has(key)){
@@ -32,6 +33,8 @@
             window.localStorage.setItem('totalPrice', JSON.stringify(totalPrice));
 
             window.localStorage.setItem('itemIDString', itemIDString);
+
+            window.localStorage.setItem('itemInventories', JSON.stringify(Array.from( itemInventories.entries() ) ))
             // var item = new Map(JSON.parse(sessionStorage.getItem('cartMap')));
 
         }
@@ -55,9 +58,110 @@
             cart.innerHTML = window.localStorage.getItem('cart');
             updateCart();
         }
+
+        itemInventories = new Map(JSON.parse(window.localStorage.getItem('itemInventories')));
+        
+        for(var i=0; i< Array.from(itemInventories.keys()).length; i++){
+            var key = Array.from(itemInventories.keys())[i];
+            var inventory = itemInventories.get(key);
+            if(cartMap.has(key)){  
+                if(inventory == cartMap.get(key).length){
+
+                    disableAddButton(true, key);
+                }
+            }
+
+        }
+
+
+
+        
         
     }
     
+    
+
+    function addItem(id, title, price, img, inventory){
+        
+        
+        itemInventories.set(id, inventory);
+        console.log(itemInventories.get(id) + " param" + inventory);
+        
+        //create a new item
+        var item = { 
+            id: id, 
+            title: title,
+            price: price,
+            img: img
+        };
+
+        insertCartMap(id, item);
+        var quantity = cartMap.get(id).length;
+
+
+        totalItems++;
+        //update string of ids
+        itemIDstoString();
+        //update the number of items in the cart
+        updateCart();
+        //update the price
+        totalPrice += item.price;
+
+       
+
+        if(totalItems == 1){
+          //first itme in the cart  
+            setUpCartUI();
+            
+        }else{
+            
+            updatePrice()
+        }
+
+
+        //update UI
+        if(quantity == 1){
+            UIaddNewItem(item); 
+            
+        }else{
+            updateQuantity(item.id);
+           
+        }
+
+        if(cartMap.has(id)){  
+            if(itemInventories.get(id) == cartMap.get(id).length){
+
+                disableAddButton(true, id);
+            }
+
+        }
+
+        //store the updated cart
+        storeCart()
+    
+    }
+
+    function setUpCartUI(){
+        emptyCartUI = document.getElementById("cartDiv").innerHTML;
+        window.localStorage.setItem('emptyCart', emptyCartUI);
+        //remove text that says "Empty Cart"
+        var fillerText = document.getElementById("cartText");
+        fillerText.parentNode.removeChild(fillerText);
+
+        var fillerImg = document.getElementById("cartFiller");
+        fillerImg.parentNode.removeChild(fillerImg);
+            
+
+        var cartDiv = document.getElementById("cartPrice");
+        //create total price row
+        var pricePara = document.createElement("P");
+        pricePara.setAttribute("id", "pricePara");
+        var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
+        pricePara.appendChild(priceText);
+        cartDiv.appendChild(pricePara);
+        createCheckoutButton();
+    }
+
     function createCheckoutButton(){
 
         var form = document.getElementById("checkoutForm");
@@ -92,68 +196,6 @@
 
     }
 
-    function addItem(id, title, price, img){
-        
-        totalItems++;
-        //create a new item
-        var item = { 
-            id: id, 
-            title: title,
-            price: price,
-            img: img};
-
-        insertCartMap(id, item);
-        var quantity = cartMap.get(id).length;
-        //update string of ids
-        itemIDstoString();
-        //update the number of items in the cart
-        updateCart();
-        //update the price
-        totalPrice += item.price;
-
-         if(totalItems == 1){
-            
-            setUpCartUI();
-            
-        }else{
-            
-            updatePrice()
-        }
-        //update UI
-        if(quantity == 1){
-            UIaddNewItem(item); 
-            
-        }else{
-            updateQuantity(item.id);
-           
-        }
-
-        //store the updated cart
-        storeCart()
-    
-    }
-
-    function setUpCartUI(){
-        emptyCartUI = document.getElementById("cartDiv").innerHTML;
-        window.localStorage.setItem('emptyCart', emptyCartUI);
-        //remove text that says "Empty Cart"
-        var fillerText = document.getElementById("cartText");
-        fillerText.parentNode.removeChild(fillerText);
-
-        var fillerImg = document.getElementById("cartFiller");
-        fillerImg.parentNode.removeChild(fillerImg);
-            
-
-        var cartDiv = document.getElementById("cartPrice");
-        //create total price row
-        var pricePara = document.createElement("P");
-        pricePara.setAttribute("id", "pricePara");
-        var priceText= document.createTextNode("Total: $" + totalPrice.toFixed(2));
-        pricePara.appendChild(priceText);
-        cartDiv.appendChild(pricePara);
-        createCheckoutButton();
-    }
-
     function updatePrice(){
         var cartPrice = document.getElementById("cartPrice");
         var priceParaRm= document.getElementById("pricePara");
@@ -171,6 +213,8 @@
     }
 
     function UIaddNewItem(item){
+
+        
         //updating cart UI
         var cart = document.getElementById("cartTable");
         var row = document.createElement("TR");
@@ -229,8 +273,8 @@
         var addButtonCell = document.createElement("TD");
         var addButton = document.createElement("BUTTON");
         addButton.setAttribute("type", "submit");
-        addButton.setAttribute("class", "btn icon-btn");
-        addButton.setAttribute("onclick", "addItem(" + item.id + ", \"" + item.title + "\"," + item.price + ",\"" + item.img + "\")");
+        addButton.setAttribute("class", "btn icon-btn addbtn" + item.id);
+        addButton.setAttribute("onclick", "addItem(" + item.id + ", \"" + item.title + "\"," + item.price + ",\"" + item.img + "\", " + itemInventories.get(item.id) + ")");
         var addText = document.createTextNode("+");
         addButton.appendChild(addText);
         addButtonCell.appendChild(addButton);
@@ -253,13 +297,21 @@
         
        var price = cartMap.get(id).pop().price;
        var newQty = cartMap.get(id).length;
-       totalPrice -= price;
 
+       totalPrice -= price;
+       console.log("From remove" + itemInventories.get(id));
 
         totalItems--;
         updateCart();
         if(newQty > 0){
             updateQuantity(id);
+            //reenable add button
+             if(cartMap.has(id)){  
+
+                if(itemInventories.get(id) > cartMap.get(id).length){
+                    disableAddButton(false, id);
+                }
+            }
             
         }else{
             //remove it
@@ -268,6 +320,10 @@
             
             var removeRow = document.getElementById(id);
             removeRow.parentNode.removeChild(removeRow);
+
+            //reenable add button
+            disableAddButton(false, id);
+            
         }
         
         itemIDstoString();
@@ -280,57 +336,26 @@
            
         }
 
+        
+        
+
         storeCart();
 
     }
 
-    
+    function disableAddButton(enable, id){
+
+        console.log("disabled " + enable);
+        var addButtons = document.getElementsByClassName("addbtn" + id);
+            for(var i =0; i< addButtons.length; i++){
+                addButtons[i].disabled = enable;
+            }
+    }
     
     function loadEmptyCart(){
 
         var cart = document.getElementById("cartDiv");
         cart.innerHTML = window.localStorage.getItem('emptyCart');
-        // //remove checkout button
-        // var checkoutButton = document.getElementById("checkout");
-        // checkoutButton.parentNode.removeChild(checkoutButton);
-        // //remove checkout input
-        // var checkoutInput = document.getElementById("checkInput");
-        // checkoutInput.parentNode.removeChild(checkoutInput);
-
-        // //remove price text
-        // var priceParaRm= document.getElementById("pricePara");
-        // priceParaRm.parentNode.removeChild(priceParaRm);
-
-        // <p align="center" id="cartFiller">
-                            
-        //                     <img src="{% static 'images/empty-cart.svg' %}" width="100%" style="align-items: center; padding: 1.5rem; opacity: 0.9">
-        //                 </p>
-
-        //add image
-        // var imgP = document.createElement("P");
-        // imgP.setAttribute("id", "cartFiller");
-
-        // var cartImg = document.createElement("IMG");
-        // cartImg.setAttribute("src", "{% static 'images/empty-cart.svg' %}");
-        // cartImg.setAttribute("width", "100%");
-        // cartImg.setAttribute("style", "align-items: center; padding: 1.5rem; opacity: 0.9");
-
-        // imgP.appendChild(cartImg);
-
-        // var cartDiv = document.getElementById("cartDiv");
-        // cartDiv.replaceChild(imgP, cartDiv.childNodes[0]);
-
-
-        // // //add filler text
-        // var emptyCart = document.createElement("p");
-        // emptyCart.setAttribute("id", "cartFiller");
-        // var fillerText = document.createTextNode("Empty Cart");
-        // emptyCart.appendChild(fillerText);
-
-        // var cart = document.getElementById("cartDiv");
-        // cart.appendChild(emptyCart);
-
-
         
     }
 
@@ -374,6 +399,8 @@
         }
 
         itemIDString = IDstr;
+        // var input = document.getElementById("checkInput");
+        // input.setAttribute("value", itemIDString);
         console.log(itemIDString);
 
     }
