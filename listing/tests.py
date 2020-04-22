@@ -29,10 +29,12 @@ class TestCase1(TestCase):
 		testuser1.save()
 		l = Listing.objects.create(author=testuser1,title="test",file_path=None,text="Lorem Ipsum",price=10,inventory=10)
 		l.save()
+		self.assertTrue(Listing.objects.filter(author=testuser1).exists())
 		testuser1.delete()
-		print(l)
-		self.assertIsNone(l)
-
+		self.assertFalse(Listing.objects.filter(author=testuser1).exists())
+  
+		print('Listing cascade on user delete verified')
+  
 	def test_forms(self):
 		# Tests if the form submit is valid 
 		form_data = {'username': 'randomuser', 'password': 'randompass'}
@@ -47,3 +49,5 @@ class TestCase1(TestCase):
 		response = self.client.post("/account/signup", {'username': 'randomuser', 'email': 'test.com', 'password': 'randompass', 'password_confirm': 'randompas'})
 		self.assertFormError(response, 'form', 'email', 'Enter a valid email address.')
 		self.assertFormError(response, 'form', 'password_confirm', 'Passwords do not match')
+  
+		print('Form Validation verified')
