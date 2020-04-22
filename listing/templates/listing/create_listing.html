@@ -3,9 +3,12 @@
 
 
 <center>
-<h2>Create Listing</h2>
+  <div style="width: 40%">
+    <h4 align="left">Create Listing</h4>
+  </div>
 
-<div style="width:50%; margin-top: 3rem;"> 
+<div style="width:40%; margin-top: 2rem"> 
+
   <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
@@ -24,23 +27,27 @@
     <div class="form-group">
       <div class="form-row">
         <div class="col-md-6">
-          <label for="price"><b>Price</b></label>
+          <h6 for="price" align="left">Price</h6>
           <input type="number" class="form-control" id="price" name="price" required>
           {{form.price.errors}} 
       </div>
       <div class="col-md-6">
-        <label for="inventory"><b>Inventory</b></label>
+        <h6 for="inventory" align="left">Inventory</h6>
         <input type="number" class="form-control" id="inventory" name="inventory" required>
         {{form.inventory.errors}}
       </div>
     </div>
   </div>
     <div class="form-group">
-    <label for="text"><b>Description</b></label>
+    <h6 for="text" align="left">Description</h6>
     <textarea class="form-control" id="text" name="text" rows="5"></textarea>
     {{form.text.errors}}
   </div>
+  <div style="padding-top: 1rem">
+    
     <button type="submit" name="edit" class="btn btn-primary"><img style="padding-right: 0.5rem; padding-bottom: 0.1rem" src="{% static 'images/upload.svg' %}" height="24rem">Upload Listing</button>
+  </div>
+    
   </form>
 </div>
 </center>
