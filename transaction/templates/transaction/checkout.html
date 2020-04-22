@@ -3,9 +3,9 @@
 <html>
 <body onload="setQuantity()" id="body">
   <center>
-  <div>
+  <div align="left">
     {% if messages %}
-    <ul class="messages">
+    <ul class="messages" >
         {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
         {% endfor %}
@@ -44,12 +44,12 @@
 <div class="listing-section">
 
 {% if IS_Listings%}
-<h4>Still in Cart</h4>
+<h4 align="left" style="padding-left: 8rem;">Order Summary</h4>
 {%endif%}
-<h4 align="left" style="padding-left: 8rem">Order Summary</h4>
-<table style="background: white; opacity: 0.90;" width="70%" >
-{% for l in IS_Listings %}
 
+
+{% for l in IS_Listings %}
+  <table style="background: white; opacity: 0.90; border-bottom: 1px solid #e9e9e9" width="70%" >
   <tr>
     <td width="20%" style="padding: 1rem">
       <!-- img -->
@@ -66,15 +66,23 @@
       <!-- text -->
       <p class="card-text">{{l.text}}</p>
     </td>
-    <td width="15%">
-      <p align="center" style="color: grey"> Qty: 2</p>
+    <td width="15%" id="row{{l.id}}">
+      <!-- <p align="center" style="color: grey"> Qty: 2</p> -->
     </td>
   </tr>
+</table>
 
 {% endfor %} 
-</table>
-<div align="right" style="padding-right: 10rem; padding-top: 4rem; padding-bottom: 4rem">
-  <h6>Total Price: $100.00</h6>
+<table style="background: white;" width="70%" >
+  <tr >
+    <td style="padding: 2rem 1rem 1rem 0rem" id = "price">
+     
+    </td>
+  </tr>
+  
+</table >
+
+  
   
 </div>
 </div>
@@ -188,13 +196,59 @@
 
 
 </body>
+
+
 <script type="text/javascript">
-  // var cartMap = new Map();
-  document.getElementById("body").addEventListener("load", setQuantity);
+  var cartMap = new Map();
+  var totalPrice = 0;
+  window.addEventListener ? 
+  window.addEventListener("load",load,false) : 
+  window.attachEvent && window.attachEvent("onload",load);
+  
+  function load(){
+    cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
+    totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
+    setQuantity();
+    setPrice();
+  }
+
   function setQuantity(){
-    alert("alert!");
-    // console.log("yes");
-    // cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
+    
+    
+    for(var i=0; i< Array.from(cartMap.keys()).length; i++){
+
+
+      var key = Array.from(cartMap.keys())[i];
+
+      var qty = cartMap.get(key).length;
+
+      var qtyRow = document.getElementById("row" +key);
+      console.log(qtyRow==null);
+
+      var qtyPara = document.createElement("P");
+
+      qtyPara.setAttribute("align", "center");
+      qtyPara.setAttribute("style", "color: grey");
+      qtyPara.setAttribute("id", "test");
+
+      var qtyText = document.createTextNode("Qty: " + qty);
+      qtyPara.appendChild(qtyText);
+      qtyRow.appendChild(qtyPara);
+
+    }
+    
+  }
+
+  function setPrice(){
+
+     // <h6 align="right">Total Price: $100.00</h6>
+     var totPrice = document.createElement("h6");
+     totPrice.setAttribute("align", "right");
+
+     totPrice.appendChild(document.createTextNode("Total Price: $" +totalPrice.toFixed(2)));
+
+     document.getElementById("price").appendChild(totPrice);
+
   }
   document.getElementById("buy").addEventListener("click", buy);
   function buy(){

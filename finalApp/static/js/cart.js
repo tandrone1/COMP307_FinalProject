@@ -44,7 +44,6 @@
 
         totalItems = JSON.parse(window.localStorage.getItem('totalItems'));
         
-
         totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
 
         itemIDString = window.localStorage.getItem('itemIDString');
@@ -56,7 +55,6 @@
             cart.innerHTML = window.localStorage.getItem('cart');
             updateCart();
         }
-
         
     }
     
@@ -170,8 +168,8 @@
         cartPrice.appendChild(pricePara);
             
         //update ID string
-        // var input = document.getElementById("checkInput");
-        // input.setAttribute("value", itemIDString);
+        var input = document.getElementById("checkInput");
+        input.setAttribute("value", itemIDString);
     }
 
     function UIaddNewItem(item){
@@ -378,5 +376,6 @@
         }
 
         itemIDString = IDstr;
+        console.log(itemIDString);
 
     }
