@@ -108,7 +108,7 @@ def history_action(request):
         transactions = Transaction.objects.filter(customer=request.user)
         pl={}
         carts={}
-        for t in transactions:
+        for t in reversed(transactions):
             # print(t.id)
             cart = PurchasedListing.objects.filter(transaction=t)
             pl={str(t.date.strftime("%c")):cart}

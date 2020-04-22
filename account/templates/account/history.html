@@ -4,31 +4,31 @@
 <center>
 
 <div class="listing-section">
-<h3>Order History</h3>
+<h4 align="left" style="padding-left: 16rem;">Order History</h4>
 
-
-
-<!-- PROBABLY WANT TO MAKE THE CARTS INTO TABLES NOT LISTS -->
 
 {% for p,c in carts.items %}
-  <h3>{{p}}</h3>
+  <p align="left" style="padding-left: 16rem; padding-top: 1rem; padding-bottom: 0rem;" class="text-muted">{{p}}</p>
   {% for l in c %}
-    <div class="card mb-3 custom-card">
-
-    <div class="row" >
-      <div class="col-md-5 listing-img">
-        <img src="{% static 'images/'|add:l.file_path %}" class="img-responsive center-img card-img custom-img " alt="..." >
-      </div>
-      <div class="col-md-7">
-        <div class="card-body">
-          <h5 class="card-title">{{l.title}}</h5> 
-          <p class="card-text">{{l.text}}</p>
-          <p class="card-price"><small class="text-text">$</small>{{l.price}}</p>
-          <p class="card-author">By {{l.author}}</p>
-        </div>
-      </div>
-    </div>
-    </div>
+    <table  style="background: white; opacity: 0.90; border-top: 1px solid #e9e9e9; border-bottom: 1px solid #e9e9e9; padding-bottom: 20rem" width="60%" >
+        <tr>
+          <td width="15%" style="padding: 1rem">
+            <!-- img -->
+            <img src="{% static 'images/'|add:l.file_path %}" style="max-height:100%; max-width:100%" alt="..." >
+          </td>
+          <td width="35%" style="padding: 1.5rem">
+            <!-- name and price -->
+            <h5>{{l.title}}</h5>
+            <p class="card-price">${{l.price}}</p>
+            <p class="card-author"><small class="text-text">By {{l.author}}</small></p>
+            
+          </td>
+          <td width="50%" style="padding: 1rem">
+            <!-- text -->
+            <p class="card-text">{{l.text}}</p>
+          </td>
+        </tr>
+    </table>
   {% endfor %}
 {% endfor %}
 </div>
