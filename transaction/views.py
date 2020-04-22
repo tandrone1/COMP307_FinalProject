@@ -28,25 +28,25 @@ from django.contrib import messages
 def checkout_action(request):
 	template = 'transaction/checkout.html'
 	IS_Listings = {}
-	# for i in request.session.get('goods'):
-	# 	IS_Listings.update(Listing.objects.filter(id=i).values())
-	# print(IS_Listings)
+	#sending the lists of purchased and out of stock items
 	context = {
 		'OOS_Listings':Listing.objects.filter(id__in = request.session.get('bads')),
 		'IS_Listings':Listing.objects.filter(id__in = request.session.get('goods'))}
 	if request.method == 'POST':
 		form = checkoutForm(request.POST)
 		if request.POST.get('buy') is not None and form.is_valid():
+			#creating the transaction for the checkout
 			t = Transaction(customer=request.user)
 			t.save()
+			#for each item being bought, decrement its inventory by 1
 			for j in request.session.get('goods'):
 				i = Listing.objects.get(id=j)
 				i.inventory = i.inventory-1
 				i.save()
 				messages.add_message(request, messages.INFO, str(i.title) + " was purchased.")
+				#create the new purchasedlisting and attach it
 				tempPL = PurchasedListing(transaction=t, author = i.author, title = i.title, file_path = i.file_path, text = i.text, price = i.price, parent = i)
 				tempPL.save()
-				#CHANGE ME IF DEPLOYED!!!!#
 				template = 'listing/listing_list.html'
 				context = {'my_listings': Listing.objects.filter(author=request.user)}
 				context['user'] = request.user 

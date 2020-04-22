@@ -53,8 +53,6 @@ class Listing(models.Model):
 
 
 class PurchasedListing(models.Model):
-    #Change author to correspond to account eventually
-    # id = models.AutoField(primary_key=True)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,default=1)
     author = models.TextField(null=True)
     title = models.TextField(null=True)
@@ -62,7 +60,6 @@ class PurchasedListing(models.Model):
     text = models.TextField(null=True)
     price = models.TextField(null=True)
     parent = models.ForeignKey(Listing, on_delete=models.SET_NULL, default=None, null=True)
-    #purchaser = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
