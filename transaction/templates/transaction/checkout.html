@@ -199,6 +199,8 @@
 
 
 <script type="text/javascript">
+
+  //global variables
   var cartMap = new Map();
   var totalPrice = 0;
   window.addEventListener ? 
@@ -206,6 +208,7 @@
   window.attachEvent && window.attachEvent("onload",load);
   
   function load(){
+    //retrieve variables from local storage
     cartMap = new Map(JSON.parse(window.localStorage.getItem('cartMap')));
     totalPrice =JSON.parse(window.localStorage.getItem('totalPrice'));
     setQuantity();
@@ -215,7 +218,7 @@
 
   function setQuantity(){
     
-    
+    //set the quantity for field for each row in the order summary
     for(var i=0; i< Array.from(cartMap.keys()).length; i++){
 
 
@@ -242,7 +245,7 @@
 
   function setPrice(){
 
-     // <h6 align="right">Total Price: $100.00</h6>
+     //set the price total price of the elements
      var totPrice = document.createElement("h6");
      totPrice.setAttribute("align", "right");
 
@@ -251,9 +254,10 @@
      document.getElementById("price").appendChild(totPrice);
 
   }
+
   document.getElementById("buy").addEventListener("click", buy);
   function buy(){
-    
+    //clears storage when the user checks out
     window.localStorage.clear();
   }
 
